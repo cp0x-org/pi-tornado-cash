@@ -1,6 +1,6 @@
 # Permissionless TornadoCash Interface by cp0x
 
-An open-source, permissionless interface for the TornadoCash protocol, based on the official [TornadoCash repository](github.com/tornadocash), designed to be fully permissionless and enable direct, unrestricted interaction with smart contracts.
+An open-source, permissionless interface for the TornadoCash protocol, based on the official [TornadoCash repository](https://github.com/tornadocash), designed to be fully permissionless and enable direct, unrestricted interaction with smart contracts.
 
 ## Application Links
 - Website: [pi.cp0x.com](https://pi.cp0x.com/)
