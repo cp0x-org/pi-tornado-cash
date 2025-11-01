@@ -20,14 +20,14 @@ const link = ({ getContext }) => {
 }
 
 const CHAIN_GRAPH_URLS = {
-  1: 'https://api.thegraph.com/subgraphs/name/tornadocash/mainnet-tornado-subgraph',
+  1: 'https://gateway.thegraph.com/api/8b164501e1862078eff5fb9dda136c6c/subgraphs/id/Ec6fVMDVqXTDQZ3c4jxcyV3zBXqkdgMWfhdtCgtqn7Sh',
   5: 'https://api.thegraph.com/subgraphs/name/tornadocash/goerli-tornado-subgraph',
-  10: 'https://api.thegraph.com/subgraphs/name/tornadocash/optimism-tornado-subgraph',
-  56: 'https://api.thegraph.com/subgraphs/name/tornadocash/bsc-tornado-subgraph',
+  10: 'https://gateway.thegraph.com/api/d2db349f28c895aa2272421996404c8d/subgraphs/id/GvkbnEVhLD6KArXpEzLFtSKRmspBW29ApKFqR5FjuP2P',
+  56: 'https://gateway.thegraph.com/api/30503850823438e04497429381e416f7/subgraphs/id/CiwGzefDBZCavXRPnwarnnF8xDDoLw4boBuySomJWYnV',
   100: 'https://api.thegraph.com/subgraphs/name/tornadocash/xdai-tornado-subgraph',
-  137: 'https://api.thegraph.com/subgraphs/name/tornadocash/matic-tornado-subgraph',
-  42161: 'https://api.thegraph.com/subgraphs/name/tornadocash/arbitrum-tornado-subgraph',
-  43114: 'https://api.thegraph.com/subgraphs/name/tornadocash/avalanche-tornado-subgraph'
+  137: 'https://gateway.thegraph.com/api/d2db349f28c895aa2272421996404c8d/subgraphs/id/HUMgwMYNrPQpnBJgesFXyy5u6jSiJ6u5nNWQng9ayCmD',
+  42161: 'https://gateway.thegraph.com/api/d2db349f28c895aa2272421996404c8d/subgraphs/id/8x8o6XFAqYZmiPwrJ51UxGTaZLYyW1fFtghvsEy7a1KJ',
+  43114: 'https://gateway.thegraph.com/api/d2db349f28c895aa2272421996404c8d/subgraphs/id/CqUYVKJT9Jsyt7qnGNrf4FJNHw75ZbFGuzaJgqdaFASo'
 }
 
 const defaultOptions = {

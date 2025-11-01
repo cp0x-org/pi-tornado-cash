@@ -14,43 +14,6 @@
     </b-notification>
 
     <b-notification
-      :active="isActiveNotification.third"
-      class="main-notification"
-      type="is-warning"
-      icon-pack="icon"
-      has-icon
-      :aria-close-label="$t('closeNotification')"
-      @close="disableNotification({ key: 'third' })"
-    >
-      <i18n path="trustBanner.trustLess">
-        <template v-slot:link>
-          <a href="https://tornado.cash/">{{ $t('trustBanner.link') }}</a>
-        </template>
-      </i18n>
-    </b-notification>
-
-    <b-notification
-      :active="isActiveNotification.first"
-      class="main-notification"
-      type="is-info"
-      icon-pack="icon"
-      has-icon
-      :aria-close-label="$t('closeNotification')"
-      @close="disableNotification({ key: 'first' })"
-    >
-      <i18n path="indexNotification">
-        <template v-slot:link>
-          <a
-            href="https://twitter.com/TornadoCash/status/1204745639759884289"
-            target="_blank"
-            rel="noopener noreferrer"
-            >{{ $t('indexNotificationLinkText') }}</a
-          >
-        </template>
-      </i18n>
-    </b-notification>
-
-    <b-notification
       v-if="isEthLink"
       :active="isActiveNotification.ethLink"
       class="main-notification"

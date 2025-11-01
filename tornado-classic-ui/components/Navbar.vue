@@ -1,10 +1,23 @@
 <template>
   <b-navbar wrapper-class="container" class="header">
     <template slot="brand">
-      <b-navbar-item tag="router-link" to="/" data-test="tornado_main_page" active-class="">
-        <Logo />
+      <b-navbar-item
+        tag="router-link"
+        to="/"
+        data-test="tornado_main_page"
+        active-class=""
+        style="display: flex; flex-direction: column; align-items: flex-start;"
+      >
+        <div style="display: flex; align-items: flex-start;">
+          <Logo />
+        </div>
+        <div style="display: flex; align-items: center; margin-left: 54px;">
+          <span style="margin-right: 4px;">by</span>
+          <Cp0xLogo />
+        </div>
       </b-navbar-item>
     </template>
+
     <template slot="start">
       <b-navbar-item
         v-if="isEnabledGovernance"
@@ -18,16 +31,6 @@
       </b-navbar-item>
       <b-navbar-item tag="router-link" to="/compliance" data-test="compliance_link">
         {{ $t('compliance') }}
-      </b-navbar-item>
-      <b-navbar-item
-        href="https://docs.tornado.cash"
-        target="_blank"
-        data-test="docs_link"
-        rel="noopener noreferrer"
-        class="has-tag"
-      >
-        <b-icon icon="open-book" size="is-small" class="mr-1" />
-        <span>{{ $t('docs') }}</span>
       </b-navbar-item>
     </template>
     <template slot="end">
@@ -54,7 +57,8 @@
 
 <script>
 import { mapState, mapGetters } from 'vuex'
-import Logo from '@/components/Logo'
+import Logo from '@/components/Logo.vue'
+import Cp0xLogo from '@/components/Cp0xLogo.vue'
 import { Indicator } from '@/modules/account'
 import MetamaskNavbarIcon from '@/components/MetamaskNavbarIcon'
 import NetworkNavbarIcon from '@/components/NetworkNavbarIcon'
@@ -62,6 +66,7 @@ import NetworkNavbarIcon from '@/components/NetworkNavbarIcon'
 export default {
   components: {
     Logo,
+    Cp0xLogo,
     Indicator,
     NetworkNavbarIcon,
     MetamaskNavbarIcon

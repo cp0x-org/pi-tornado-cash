@@ -79,17 +79,12 @@ export default {
       {
         hid: 'og:url',
         property: 'og:url',
-        content: 'https://tornado.cash'
+        content: 'https://tornado.cp0x.com'
       },
       {
         hid: 'og:type',
         property: 'og:type',
         content: 'website'
-      },
-      {
-        hid: 'og:image',
-        property: 'og:image',
-        content: 'https://tornado.cash/tw.png'
       },
       {
         hid: 'description',

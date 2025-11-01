@@ -16,10 +16,6 @@
                 >{{ donationsAddress }}</a
               >
             </div>
-            <div class="level-subitem">
-              Tornado.cash version:
-              <span class="footer-version__value">{{ commit }}</span>
-            </div>
           </div>
         </div>
         <div class="level-right">
@@ -37,31 +33,7 @@
                 <b-button
                   tag="a"
                   type="is-icon"
-                  href="https://torn.community"
-                  target="_blank"
-                  rel="noopener noreferrer"
-                  icon-right="discourse"
-                ></b-button>
-                <b-button
-                  tag="a"
-                  type="is-icon"
-                  href="https://discord.com/invite/TFDrM8K42j"
-                  target="_blank"
-                  rel="noopener noreferrer"
-                  icon-right="discord"
-                ></b-button>
-                <b-button
-                  tag="a"
-                  type="is-icon"
-                  href="https://tornado-cash.medium.com"
-                  target="_blank"
-                  rel="noopener noreferrer"
-                  icon-right="medium"
-                ></b-button>
-                <b-button
-                  tag="a"
-                  type="is-icon"
-                  href="https://twitter.com/TornadoCash"
+                  href="https://twitter.com/cp0xdotcom"
                   target="_blank"
                   rel="noopener noreferrer"
                   icon-right="twitter"
@@ -69,7 +41,7 @@
                 <b-button
                   tag="a"
                   type="is-icon"
-                  href="https://t.me/TornadoCashOfficial"
+                  href="https://t.me/cp0xdotcom"
                   target="_blank"
                   rel="noopener noreferrer"
                   icon-right="telegram"
@@ -77,7 +49,7 @@
                 <b-button
                   tag="a"
                   type="is-icon"
-                  href="https://github.com/tornadocash"
+                  href="https://github.com/cp0x-org"
                   target="_blank"
                   rel="noopener noreferrer"
                   icon-right="github"
