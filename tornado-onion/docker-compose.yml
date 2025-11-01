@@ -1,0 +1,20 @@
+services:
+  web:
+    image: nginx:alpine
+    restart: always
+    container_name: tornado_ui
+    volumes:
+      - ./ui-mini:/usr/share/nginx/html:ro
+    ports:
+      - "8080:80"
+
+  tor:
+    image: goldy/tor-hidden-service:latest
+    container_name: tornado_onion
+    restart: always
+    depends_on: [ web ]
+    environment:
+      SERVICE1_TOR_SERVICE_HOSTS: "80:web:80"
+      SERVICE1_TOR_SERVICE_VERSION: "3"
+    volumes:
+      - ./tor_data:/var/lib/tor/hidden_service
