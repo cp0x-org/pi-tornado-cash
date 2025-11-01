@@ -1,3 +1,12 @@
+const {
+  INFURA_KEY,
+  ALCHEMY_MAINNET_KEY,
+  ALCHEMY_POLYGON_KEY,
+  ALCHEMY_OPTIMISM_KEY,
+  ALCHEMY_ARBITRUM_KEY,
+  ALCHEMY_GOERLI_KEY
+} = process.env
+
 export default {
   netId1: {
     rpcCallRetryAttempt: 15,
@@ -19,17 +28,13 @@ export default {
     networkName: 'Ethereum Mainnet',
     deployedBlock: 9116966,
     rpcUrls: {
-      // Infura: {
-      //   name: 'Infura',
-      //   url: `https://mainnet.infura.io/v3/${INFURA_KEY}`
-      // },
-      // Alchemy: {
-      //   name: 'Alchemy',
-      //   url: `https://eth-mainnet.alchemyapi.io/v2/${ALCHEMY_MAINNET_KEY}`
-      // },
-      Ankr: {
-        name: 'Ankr',
-        url: `https://rpc.ankr.com/eth/f3db65d8f5e4e3390e17071e222633de0e0f6ff0975754a09489e8f470f4008c`
+      Infura: {
+        name: 'Infura',
+        url: `https://mainnet.infura.io/v3/${INFURA_KEY}`
+      },
+      Alchemy: {
+        name: 'Alchemy',
+        url: `https://eth-mainnet.alchemyapi.io/v2/${ALCHEMY_MAINNET_KEY}`
       }
     },
     multicall: '0xeefba1e63905ef1d7acba5a8513c70307c1ce441',
@@ -154,10 +159,6 @@ export default {
       publicRpc3: {
         name: 'BSC Public RPC 3',
         url: 'https://bsc-dataseed1.ninicoin.io/'
-      },
-      Ankr: {
-        name: 'Ankr',
-        url: `https://rpc.ankr.com/bsc/f3db65d8f5e4e3390e17071e222633de0e0f6ff0975754a09489e8f470f4008c`
       }
     },
     tokens: {
@@ -202,9 +203,13 @@ export default {
     multicall: '0x11ce4B23bD875D7F5C6a31084f55fDe1e9A87507',
     echoContractAccount: '0xa75BF2815618872f155b7C4B0C81bF990f5245E4',
     rpcUrls: {
-      Ankr: {
-        name: 'Ankr',
-        url: `https://rpc.ankr.com/polygon/f3db65d8f5e4e3390e17071e222633de0e0f6ff0975754a09489e8f470f4008c`
+      Infura: {
+        name: 'Infura',
+        url: `https://polygon-mainnet.infura.io/v3/${INFURA_KEY}`
+      },
+      Alchemy: {
+        name: 'Alchemy',
+        url: `https://polygon-mainnet.g.alchemy.com/v2/${ALCHEMY_POLYGON_KEY}`
       }
     },
     tokens: {
@@ -250,17 +255,13 @@ export default {
     echoContractAccount: '0xa75BF2815618872f155b7C4B0C81bF990f5245E4',
     ovmGasPriceOracleContract: '0x420000000000000000000000000000000000000F',
     rpcUrls: {
-      // Alchemy: {
-      //   name: 'Alchemy',
-      //   url: `https://opt-mainnet.g.alchemy.com/v2/${ALCHEMY_OPTIMISM_KEY}`
-      // },
-      // Infura: {
-      //   name: 'Infura',
-      //   url: `https://optimism-mainnet.infura.io/v3/${INFURA_KEY}`
-      // }
-      Ankr: {
-        name: 'Ankr',
-        url: `https://rpc.ankr.com/optimism/f3db65d8f5e4e3390e17071e222633de0e0f6ff0975754a09489e8f470f4008c`
+      Alchemy: {
+        name: 'Alchemy',
+        url: `https://opt-mainnet.g.alchemy.com/v2/${ALCHEMY_OPTIMISM_KEY}`
+      },
+      Infura: {
+        name: 'Infura',
+        url: `https://optimism-mainnet.infura.io/v3/${INFURA_KEY}`
       }
     },
     tokens: {
@@ -309,18 +310,14 @@ export default {
         name: 'Arbitrum Public RPC',
         url: 'https://arb1.arbitrum.io/rpc'
       },
-      Ankr: {
-        name: 'Ankr',
-        url: `https://rpc.ankr.com/arbitrum/f3db65d8f5e4e3390e17071e222633de0e0f6ff0975754a09489e8f470f4008c`
+      Alchemy: {
+        name: 'Alchemy',
+        url: `https://arb-mainnet.g.alchemy.com/v2/${ALCHEMY_ARBITRUM_KEY}`
+      },
+      Infura: {
+        name: 'Infura',
+        url: `https://arbitrum-mainnet.infura.io/v3/${INFURA_KEY}`
       }
-      // Alchemy: {
-      //   name: 'Alchemy',
-      //   url: `https://arb-mainnet.g.alchemy.com/v2/${ALCHEMY_ARBITRUM_KEY}`
-      // },
-      // Infura: {
-      //   name: 'Infura',
-      //   url: `https://arbitrum-mainnet.infura.io/v3/${INFURA_KEY}`
-      // }
     },
     tokens: {
       eth: {
@@ -342,53 +339,53 @@ export default {
     },
     'tornado-proxy-light.contract.tornadocash.eth': '0x0D5550d52428E7e3175bfc9550207e4ad3859b17'
   },
-  // netId100: {
-  //   rpcCallRetryAttempt: 15,
-  //   gasPrices: {
-  //     instant: 6,
-  //     fast: 5,
-  //     standard: 4,
-  //     low: 1
-  //   },
-  //   nativeCurrency: 'xdai',
-  //   currencyName: 'xDAI',
-  //   explorerUrl: {
-  //     tx: 'https://blockscout.com/xdai/mainnet/tx/',
-  //     address: 'https://blockscout.com/xdai/mainnet/address/',
-  //     block: 'https://blockscout.com/xdai/mainnet/block/'
-  //   },
-  //   merkleTreeHeight: 20,
-  //   emptyElement: '21663839004416932945382355908790599225266501822907911457504978515578255421292',
-  //   networkName: 'Gnosis Chain',
-  //   deployedBlock: 17754561,
-  //   multicall: '0xb5b692a88bdfc81ca69dcb1d924f59f0413a602a',
-  //   echoContractAccount: '0xa75BF2815618872f155b7C4B0C81bF990f5245E4',
-  //   rpcUrls: {
-  //     publicRpc: {
-  //       name: 'Gnosis Chain RPC',
-  //       url: 'https://rpc.gnosischain.com/tornado'
-  //     }
-  //   },
-  //   tokens: {
-  //     xdai: {
-  //       instanceAddress: {
-  //         '100': '0x1E34A77868E19A6647b1f2F47B51ed72dEDE95DD',
-  //         '1000': '0xdf231d99Ff8b6c6CBF4E9B9a945CBAcEF9339178',
-  //         '10000': '0xaf4c0B70B2Ea9FB7487C7CbB37aDa259579fe040',
-  //         '100000': '0xa5C2254e4253490C54cef0a4347fddb8f75A4998'
-  //       },
-  //       symbol: 'xDAI',
-  //       decimals: 18
-  //     }
-  //   },
-  //   ensSubdomainKey: 'gnosis-tornado',
-  //   pollInterval: 15,
-  //   constants: {
-  //     NOTE_ACCOUNT_BLOCK: 17754564,
-  //     ENCRYPTED_NOTES_BLOCK: 17754564
-  //   },
-  //   'tornado-proxy-light.contract.tornadocash.eth': '0x0D5550d52428E7e3175bfc9550207e4ad3859b17'
-  // },
+  netId100: {
+    rpcCallRetryAttempt: 15,
+    gasPrices: {
+      instant: 6,
+      fast: 5,
+      standard: 4,
+      low: 1
+    },
+    nativeCurrency: 'xdai',
+    currencyName: 'xDAI',
+    explorerUrl: {
+      tx: 'https://blockscout.com/xdai/mainnet/tx/',
+      address: 'https://blockscout.com/xdai/mainnet/address/',
+      block: 'https://blockscout.com/xdai/mainnet/block/'
+    },
+    merkleTreeHeight: 20,
+    emptyElement: '21663839004416932945382355908790599225266501822907911457504978515578255421292',
+    networkName: 'Gnosis Chain',
+    deployedBlock: 17754561,
+    multicall: '0xb5b692a88bdfc81ca69dcb1d924f59f0413a602a',
+    echoContractAccount: '0xa75BF2815618872f155b7C4B0C81bF990f5245E4',
+    rpcUrls: {
+      publicRpc: {
+        name: 'Gnosis Chain RPC',
+        url: 'https://rpc.gnosischain.com/tornado'
+      }
+    },
+    tokens: {
+      xdai: {
+        instanceAddress: {
+          '100': '0x1E34A77868E19A6647b1f2F47B51ed72dEDE95DD',
+          '1000': '0xdf231d99Ff8b6c6CBF4E9B9a945CBAcEF9339178',
+          '10000': '0xaf4c0B70B2Ea9FB7487C7CbB37aDa259579fe040',
+          '100000': '0xa5C2254e4253490C54cef0a4347fddb8f75A4998'
+        },
+        symbol: 'xDAI',
+        decimals: 18
+      }
+    },
+    ensSubdomainKey: 'gnosis-tornado',
+    pollInterval: 15,
+    constants: {
+      NOTE_ACCOUNT_BLOCK: 17754564,
+      ENCRYPTED_NOTES_BLOCK: 17754564
+    },
+    'tornado-proxy-light.contract.tornadocash.eth': '0x0D5550d52428E7e3175bfc9550207e4ad3859b17'
+  },
   netId43114: {
     rpcCallRetryAttempt: 15,
     gasPrices: {
@@ -414,10 +411,6 @@ export default {
       publicRpc: {
         name: 'Avalanche RPC',
         url: 'https://api.avax.network/ext/bc/C/rpc'
-      },
-      Ankr: {
-        name: 'Ankr',
-        url: `https://rpc.ankr.com/avalanche/f3db65d8f5e4e3390e17071e222633de0e0f6ff0975754a09489e8f470f4008c`
       }
     },
     tokens: {
@@ -438,117 +431,117 @@ export default {
       ENCRYPTED_NOTES_BLOCK: 4429813
     },
     'tornado-proxy-light.contract.tornadocash.eth': '0x0D5550d52428E7e3175bfc9550207e4ad3859b17'
+  },
+  netId5: {
+    rpcCallRetryAttempt: 15,
+    gasPrices: {
+      instant: 80,
+      fast: 50,
+      standard: 25,
+      low: 8
+    },
+    nativeCurrency: 'eth',
+    currencyName: 'gETH',
+    explorerUrl: {
+      tx: 'https://goerli.etherscan.io/tx/',
+      address: 'https://goerli.etherscan.io/address/',
+      block: 'https://goerli.etherscan.io/block/'
+    },
+    merkleTreeHeight: 20,
+    emptyElement: '21663839004416932945382355908790599225266501822907911457504978515578255421292',
+    networkName: 'Ethereum Goerli',
+    deployedBlock: 3781595,
+    multicall: '0x77dca2c955b15e9de4dbbcf1246b4b85b651e50e',
+    echoContractAccount: '0x37e6859804b6499d1e4a86d70a5fdd5de6a0ac65',
+    aggregatorContract: '0x8cb1436F64a3c33aD17bb42F94e255c4c0E871b2',
+    rpcUrls: {
+      Alchemy: {
+        name: 'Alchemy',
+        url: `https://eth-goerli.alchemyapi.io/v2/${ALCHEMY_GOERLI_KEY}`
+      }
+    },
+    tokens: {
+      eth: {
+        instanceAddress: {
+          '0.1': '0x6Bf694a291DF3FeC1f7e69701E3ab6c592435Ae7',
+          '1': '0x3aac1cC67c2ec5Db4eA850957b967Ba153aD6279',
+          '10': '0x723B78e67497E85279CB204544566F4dC5d2acA0',
+          '100': '0x0E3A09dDA6B20aFbB34aC7cD4A6881493f3E7bf7'
+        },
+        symbol: 'ETH',
+        decimals: 18
+      },
+      dai: {
+        instanceAddress: {
+          '100': '0x76D85B4C0Fc497EeCc38902397aC608000A06607',
+          '1000': '0xCC84179FFD19A1627E79F8648d09e095252Bc418',
+          '10000': '0xD5d6f8D9e784d0e26222ad3834500801a68D027D',
+          '100000': '0x407CcEeaA7c95d2FE2250Bf9F2c105aA7AAFB512'
+        },
+        tokenAddress: '0xdc31Ee1784292379Fbb2964b3B9C4124D8F89C60',
+        symbol: 'DAI',
+        decimals: 18,
+        gasLimit: '55000'
+      },
+      cdai: {
+        instanceAddress: {
+          '5000': '0x833481186f16Cece3f1Eeea1a694c42034c3a0dB',
+          '50000': '0xd8D7DE3349ccaA0Fde6298fe6D7b7d0d34586193',
+          '500000': '0x8281Aa6795aDE17C8973e1aedcA380258Bc124F9',
+          '5000000': '0x57b2B8c82F065de8Ef5573f9730fC1449B403C9f'
+        },
+        tokenAddress: '0x822397d9a55d0fefd20F5c4bCaB33C5F65bd28Eb',
+        symbol: 'cDAI',
+        decimals: 8,
+        gasLimit: '425000'
+      },
+      usdc: {
+        instanceAddress: {
+          '100': '0x05E0b5B40B7b66098C2161A5EE11C5740A3A7C45',
+          '1000': '0x23173fE8b96A4Ad8d2E17fB83EA5dcccdCa1Ae52',
+          '10000': '',
+          '100000': ''
+        },
+        tokenAddress: '0xD87Ba7A50B2E7E660f678A895E4B72E7CB4CCd9C',
+        symbol: 'USDC',
+        decimals: 6,
+        gasLimit: '80000'
+      },
+      usdt: {
+        instanceAddress: {
+          '100': '0x538Ab61E8A9fc1b2f93b3dd9011d662d89bE6FE6',
+          '1000': '0x94Be88213a387E992Dd87DE56950a9aef34b9448',
+          '10000': '',
+          '100000': ''
+        },
+        tokenAddress: '0xb7FC2023D96AEa94Ba0254AA5Aeb93141e4aad66',
+        symbol: 'USDT',
+        decimals: 6,
+        gasLimit: '100000'
+      },
+      wbtc: {
+        instanceAddress: {
+          '0.1': '0x242654336ca2205714071898f67E254EB49ACdCe',
+          '1': '0x776198CCF446DFa168347089d7338879273172cF',
+          '10': '0xeDC5d01286f99A066559F60a585406f3878a033e',
+          '100': ''
+        },
+        tokenAddress: '0xC04B0d3107736C32e19F1c62b2aF67BE61d63a05',
+        symbol: 'WBTC',
+        decimals: 8,
+        gasLimit: '85000'
+      }
+    },
+    ensSubdomainKey: 'goerli-tornado',
+    pollInterval: 15,
+    constants: {
+      GOVERNANCE_BLOCK: 3945171,
+      NOTE_ACCOUNT_BLOCK: 4131375,
+      ENCRYPTED_NOTES_BLOCK: 4131375,
+      MINING_BLOCK_TIME: 15
+    },
+    'torn.contract.tornadocash.eth': '0x77777FeDdddFfC19Ff86DB637967013e6C6A116C',
+    'governance.contract.tornadocash.eth': '0x5efda50f22d34F262c29268506C5Fa42cB56A1Ce',
+    'tornado-proxy.contract.tornadocash.eth': '0x454d870a72e29d5e5697f635128d18077bd04c60'
   }
-  // netId5: {
-  //   rpcCallRetryAttempt: 15,
-  //   gasPrices: {
-  //     instant: 80,
-  //     fast: 50,
-  //     standard: 25,
-  //     low: 8
-  //   },
-  //   nativeCurrency: 'eth',
-  //   currencyName: 'gETH',
-  //   explorerUrl: {
-  //     tx: 'https://goerli.etherscan.io/tx/',
-  //     address: 'https://goerli.etherscan.io/address/',
-  //     block: 'https://goerli.etherscan.io/block/'
-  //   },
-  //   merkleTreeHeight: 20,
-  //   emptyElement: '21663839004416932945382355908790599225266501822907911457504978515578255421292',
-  //   networkName: 'Ethereum Goerli',
-  //   deployedBlock: 3781595,
-  //   multicall: '0x77dca2c955b15e9de4dbbcf1246b4b85b651e50e',
-  //   echoContractAccount: '0x37e6859804b6499d1e4a86d70a5fdd5de6a0ac65',
-  //   aggregatorContract: '0x8cb1436F64a3c33aD17bb42F94e255c4c0E871b2',
-  //   rpcUrls: {
-  //     Alchemy: {
-  //       name: 'Alchemy',
-  //       url: `https://eth-goerli.alchemyapi.io/v2/${ALCHEMY_GOERLI_KEY}`
-  //     }
-  //   },
-  //   tokens: {
-  //     eth: {
-  //       instanceAddress: {
-  //         '0.1': '0x6Bf694a291DF3FeC1f7e69701E3ab6c592435Ae7',
-  //         '1': '0x3aac1cC67c2ec5Db4eA850957b967Ba153aD6279',
-  //         '10': '0x723B78e67497E85279CB204544566F4dC5d2acA0',
-  //         '100': '0x0E3A09dDA6B20aFbB34aC7cD4A6881493f3E7bf7'
-  //       },
-  //       symbol: 'ETH',
-  //       decimals: 18
-  //     },
-  //     dai: {
-  //       instanceAddress: {
-  //         '100': '0x76D85B4C0Fc497EeCc38902397aC608000A06607',
-  //         '1000': '0xCC84179FFD19A1627E79F8648d09e095252Bc418',
-  //         '10000': '0xD5d6f8D9e784d0e26222ad3834500801a68D027D',
-  //         '100000': '0x407CcEeaA7c95d2FE2250Bf9F2c105aA7AAFB512'
-  //       },
-  //       tokenAddress: '0xdc31Ee1784292379Fbb2964b3B9C4124D8F89C60',
-  //       symbol: 'DAI',
-  //       decimals: 18,
-  //       gasLimit: '55000'
-  //     },
-  //     cdai: {
-  //       instanceAddress: {
-  //         '5000': '0x833481186f16Cece3f1Eeea1a694c42034c3a0dB',
-  //         '50000': '0xd8D7DE3349ccaA0Fde6298fe6D7b7d0d34586193',
-  //         '500000': '0x8281Aa6795aDE17C8973e1aedcA380258Bc124F9',
-  //         '5000000': '0x57b2B8c82F065de8Ef5573f9730fC1449B403C9f'
-  //       },
-  //       tokenAddress: '0x822397d9a55d0fefd20F5c4bCaB33C5F65bd28Eb',
-  //       symbol: 'cDAI',
-  //       decimals: 8,
-  //       gasLimit: '425000'
-  //     },
-  //     usdc: {
-  //       instanceAddress: {
-  //         '100': '0x05E0b5B40B7b66098C2161A5EE11C5740A3A7C45',
-  //         '1000': '0x23173fE8b96A4Ad8d2E17fB83EA5dcccdCa1Ae52',
-  //         '10000': '',
-  //         '100000': ''
-  //       },
-  //       tokenAddress: '0xD87Ba7A50B2E7E660f678A895E4B72E7CB4CCd9C',
-  //       symbol: 'USDC',
-  //       decimals: 6,
-  //       gasLimit: '80000'
-  //     },
-  //     usdt: {
-  //       instanceAddress: {
-  //         '100': '0x538Ab61E8A9fc1b2f93b3dd9011d662d89bE6FE6',
-  //         '1000': '0x94Be88213a387E992Dd87DE56950a9aef34b9448',
-  //         '10000': '',
-  //         '100000': ''
-  //       },
-  //       tokenAddress: '0xb7FC2023D96AEa94Ba0254AA5Aeb93141e4aad66',
-  //       symbol: 'USDT',
-  //       decimals: 6,
-  //       gasLimit: '100000'
-  //     },
-  //     wbtc: {
-  //       instanceAddress: {
-  //         '0.1': '0x242654336ca2205714071898f67E254EB49ACdCe',
-  //         '1': '0x776198CCF446DFa168347089d7338879273172cF',
-  //         '10': '0xeDC5d01286f99A066559F60a585406f3878a033e',
-  //         '100': ''
-  //       },
-  //       tokenAddress: '0xC04B0d3107736C32e19F1c62b2aF67BE61d63a05',
-  //       symbol: 'WBTC',
-  //       decimals: 8,
-  //       gasLimit: '85000'
-  //     }
-  //   },
-  //   ensSubdomainKey: 'goerli-tornado',
-  //   pollInterval: 15,
-  //   constants: {
-  //     GOVERNANCE_BLOCK: 3945171,
-  //     NOTE_ACCOUNT_BLOCK: 4131375,
-  //     ENCRYPTED_NOTES_BLOCK: 4131375,
-  //     MINING_BLOCK_TIME: 15
-  //   },
-  //   'torn.contract.tornadocash.eth': '0x77777FeDdddFfC19Ff86DB637967013e6C6A116C',
-  //   'governance.contract.tornadocash.eth': '0x5efda50f22d34F262c29268506C5Fa42cB56A1Ce',
-  //   'tornado-proxy.contract.tornadocash.eth': '0x454d870a72e29d5e5697f635128d18077bd04c60'
-  // }
 }
