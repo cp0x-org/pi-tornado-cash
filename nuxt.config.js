@@ -192,7 +192,10 @@ export default {
           WC_BRIDGE: process.env.WC_BRIDGE,
           OLD_STORE_NAME: process.env.OLD_STORE_NAME,
           STORE_NAME: process.env.STORE_NAME,
-          APP_ENS_NAME: process.env.APP_ENS_NAME
+          APP_ENS_NAME: process.env.APP_ENS_NAME,
+          BASE_URL: process.env.BASE_URL,
+          NUXT_BASE_URL: process.env.NUXT_BASE_URL,
+          NUXT_ENV_BASE_URL: process.env.NUXT_BASE_URL
         })
       })
     ],
