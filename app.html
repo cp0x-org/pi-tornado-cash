@@ -4,7 +4,7 @@
   <script>
     if (window.location.search) {
       console.log('redirect')
-      window.location = window.location.origin + window.location.pathname
+      window.location = 'https://tornado.cp0x.com/' + window.location.pathname
     }
 
     function addScript(src) {
@@ -23,7 +23,7 @@
           if (scripts[i].src) {
             const source = new URL(scripts[i].src)
             console.log('Loading', source.pathname)
-            const newSource = window.location.origin + ipfsPathPrefix + source.pathname
+            const newSource = 'https://tornado.cp0x.com/' + ipfsPathPrefix + source.pathname
             addScript(newSource)
           }
         }

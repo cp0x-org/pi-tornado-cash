@@ -158,6 +158,7 @@ export default {
     'nuxt-web3-provider'
   ],
   router: {
+    base: '/',
     linkActiveClass: '',
     linkExactActiveClass: 'is-active'
   },
@@ -221,7 +222,15 @@ export default {
     ]
   ],
   env: {
+    BASE_URL: process.env.BASE_URL || 'https://tornado.cp0x.com',
     commit: getCurrentCommit()
+  },
+  publicRuntimeConfig: {
+    baseURL: process.env.NUXT_ENV_BASE_URL || 'https://tornado.cp0x.com'
+  },
+
+  axios: {
+    baseURL: process.env.NUXT_ENV_BASE_URL || 'https://tornado.cp0x.com'
   },
 
   provider: {
