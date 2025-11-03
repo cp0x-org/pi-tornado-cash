@@ -684,7 +684,9 @@ const actions = {
       tree.bulkInsert(newLeaves)
     } else {
       console.log('events', eventsData)
+      console.log('checkCommitments BEFORE')
       checkCommitments(eventsData.events)
+      console.log('checkCommitments AFTER')
       tree = treeService.createTree({ events: commitments })
     }
 

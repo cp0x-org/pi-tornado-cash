@@ -44,7 +44,8 @@ const client = new ApolloClient({
 })
 
 const registryClient = new ApolloClient({
-  uri: 'https://api.thegraph.com/subgraphs/name/tornadocash/tornado-relayer-registry',
+  uri:
+    'https://gateway.thegraph.com/api/c978a2a9a36f30ba63457b707e821e6c/subgraphs/id/DgKwfAbLfynpiq7fDJy59LDnVnia4Y5nYeRDBYi9qezc',
   cache: new InMemoryCache(),
   defaultOptions
 })

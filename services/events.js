@@ -1,6 +1,7 @@
 import Web3 from 'web3'
 
 import networkConfig from '../networkConfig'
+import eventsFile from './events.json'
 import { graph } from '@/services'
 import { download } from '@/store/snark'
 import InstanceABI from '@/abis/Instance.abi.json'
@@ -36,13 +37,16 @@ class EventService {
     }
     return cachedEvents
   }
+
   async updateEvents(type, cachedEvents) {
     const { deployedBlock } = networkConfig[`netId${this.netId}`]
 
-    const savedEvents = cachedEvents || (await this.getEvents(type))
+    console.log('eventsFile', eventsFile)
+    console.log('cached', cachedEvents)
+    const savedEvents = cachedEvents || eventsFile
 
     let fromBlock = deployedBlock
-    if (savedEvents) {
+    if (savedEvents?.lastBlock) {
       fromBlock = savedEvents.lastBlock + 1
     }
 
@@ -53,21 +57,17 @@ class EventService {
     })
 
     const allEvents = [].concat(savedEvents?.events || [], newEvents?.events || []).sort((a, b) => {
-      if (a.leafIndex && b.leafIndex) {
-        return a.leafIndex - b.leafIndex
-      }
+      if (a.leafIndex && b.leafIndex) return a.leafIndex - b.leafIndex
       return a.blockNumber - b.blockNumber
     })
 
-    const lastBlock = allEvents[allEvents.length - 1].blockNumber
+    const lastBlock = allEvents[allEvents.length - 1]?.blockNumber || fromBlock
 
     this.saveEvents({ events: allEvents, lastBlock, type })
 
-    return {
-      events: allEvents,
-      lastBlock
-    }
+    return { events: allEvents, lastBlock }
   }
+
   async findEvent({ eventName, eventToFind, type }) {
     const instanceName = this.getInstanceName(type)
 
@@ -166,7 +166,7 @@ class EventService {
       return events
     }
 
-    const blockRange = 4950
+    const blockRange = 3950
     const fromBlock = deployedBlock
     const { blockDifference, currentBlockNumber } = await this.getBlocksDiff({ fromBlock })
 
