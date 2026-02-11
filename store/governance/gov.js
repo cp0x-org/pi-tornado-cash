@@ -698,7 +698,14 @@ const actions = {
       proposals = events
         .map(({ returnValues, blockNumber }, index) => {
           const id = Number(returnValues.id)
-          const { state, startTime, endTime, forVotes, againstVotes } = statuses[index]
+          const proposalStatus = statuses[id - 1] || statuses[index] || {}
+          const {
+            state: proposalState = 0,
+            startTime = 0,
+            endTime = 0,
+            forVotes = '0',
+            againstVotes = '0'
+          } = proposalStatus
           const { title, description } = parseDescription({ id, text: returnValues.description })
 
           return {
@@ -709,7 +716,7 @@ const actions = {
             proposer: returnValues.proposer,
             endTime: Number(endTime),
             startTime: Number(startTime),
-            status: ProposalState[Number(state)],
+            status: ProposalState[Number(proposalState)],
             blockNumber,
             results: {
               for: fromWei(forVotes),

@@ -24,7 +24,11 @@ export default {
     ...mapGetters('governance/gov', ['isFetchingProposals', 'isEnabledGovernance']),
     ...mapState('metamask', ['isInitialized']),
     proposal() {
-      return this.proposals[this.$route.params.id - 1]
+      const proposalId = Number(this.$route.params.id)
+      if (!Number.isFinite(proposalId)) {
+        return null
+      }
+      return this.proposals.find((proposal) => Number(proposal.id) === proposalId) || null
     }
   },
   watch: {
