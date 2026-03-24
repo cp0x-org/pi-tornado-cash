@@ -1,13 +1,10 @@
 import 'dotenv/config'
 
 import fs from 'fs'
-import BloomFilter from 'bloomfilter.js'
-import { MerkleTree } from 'fixed-merkle-tree'
-import { buildMimcSponge } from 'circomlibjs'
 
 import networkConfig from '../networkConfig'
 
-import { loadCachedEvents, save } from './helpers'
+import { loadCachedEvents, save, createMimcHash, createTreeCache } from './helpers'
 
 const TREES_FOLDER = 'static/trees'
 const TREES_PATH = './static/trees/'
@@ -16,11 +13,6 @@ const EVENTS_PATH = './static/events/'
 const EVENTS = ['deposit']
 const enabledChains = ['1']
 let mimcHash
-
-const trees = {
-  PARTS_COUNT: 4,
-  LEVELS: 20 // const from contract
-}
 
 function getName({ path, type, instance, format = '.json', currName = 'eth' }) {
   return `${path}${type.toLowerCase()}s_${currName}_${instance}${format}`
@@ -83,47 +75,14 @@ async function createTree(netId) {
 
         console.log('events', events.length)
 
-        const bloom = new BloomFilter(events.length) // to reduce the number of false positives
-
-        const eventsData = events.reduce(
-          (acc, { leafIndex, commitment, ...rest }, i) => {
-            if (leafIndex !== i) {
-              throw new Error(`leafIndex (${leafIndex}) !== i (${i})`)
-            }
-
-            const leave = commitment.toString()
-            acc.leaves.push(leave)
-            acc.metadata[leave] = { ...rest, leafIndex }
-
-            return acc
-          },
-          { leaves: [], metadata: {} }
-        )
-
-        console.log('leaves', eventsData.leaves.length)
-
-        const tree = new MerkleTree(trees.LEVELS, eventsData.leaves, {
-          zeroElement: '21663839004416932945382355908790599225266501822907911457504978515578255421292',
-          hashFunction: mimcHash
+        const { count } = createTreeCache({
+          events,
+          filePath,
+          mimcHash,
+          zeroElement: networkConfig[`netId${netId}`].emptyElement
         })
 
-        const slices = tree.getTreeSlices(trees.PARTS_COUNT) // [edge(PARTS_COUNT)]
-
-        slices.forEach((slice, index) => {
-          slice.metadata = slice.elements.reduce((acc, curr) => {
-            if (index < trees.PARTS_COUNT - 1) {
-              bloom.add(curr)
-            }
-            acc.push(eventsData.metadata[curr])
-            return acc
-          }, [])
-
-          const sliceJson = JSON.stringify(slice, null, 2) + '\n'
-          fs.writeFileSync(`${filePath}_slice${index + 1}.json`, sliceJson)
-        })
-
-        const bloomCache = bloom.serialize()
-        fs.writeFileSync(`${filePath}_bloom.json`, bloomCache)
+        console.log('leaves', count)
       }
     }
   } catch (e) {
@@ -132,8 +91,7 @@ async function createTree(netId) {
 }
 
 async function initMimc() {
-  const mimcSponge = await buildMimcSponge()
-  mimcHash = (left, right) => mimcSponge.F.toString(mimcSponge.multiHash([BigInt(left), BigInt(right)]))
+  mimcHash = await createMimcHash()
 }
 
 async function main() {
