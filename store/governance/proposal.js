@@ -7,11 +7,141 @@ import chunk from 'lodash/chunk'
 
 import { lookupAddresses, createBatchRequestCallback } from '@/services'
 import { CHUNK_COUNT_PER_BATCH_REQUEST } from '@/constants'
+import { getGovernanceEventsFromCache } from '@/services/governanceCache'
 
 const { toWei, fromWei, toBN } = require('web3-utils')
+const DEFAULT_LOG_BLOCK_RANGE = 1000
+const MIN_LOG_BLOCK_RANGE = 25
+const TRANSIENT_RETRIES = 2
 
 const CACHE_TX = {}
 const CACHE_BLOCK = {}
+
+const sleep = (ms) => new Promise((resolve) => setTimeout(resolve, ms))
+
+const isBlockRangeTooLargeError = (err) => {
+  const message = (err?.message || '').toLowerCase()
+
+  return (
+    message.includes('block range is too large') ||
+    message.includes('max block range') ||
+    message.includes('maximum block range') ||
+    message.includes('exceed maximum')
+  )
+}
+
+async function getPastEventsChunked({
+  contract,
+  web3,
+  eventName,
+  fromBlock,
+  toBlock = 'latest',
+  filter,
+  blockRange = DEFAULT_LOG_BLOCK_RANGE
+}) {
+  const resolvedToBlock = toBlock === 'latest' ? await web3.eth.getBlockNumber() : Number(toBlock)
+  let currentFromBlock = Number(fromBlock)
+  let currentBlockRange = blockRange
+  const events = []
+  let retries = 0
+
+  if (
+    !Number.isFinite(currentFromBlock) ||
+    !Number.isFinite(resolvedToBlock) ||
+    currentFromBlock > resolvedToBlock
+  ) {
+    return events
+  }
+
+  while (currentFromBlock <= resolvedToBlock) {
+    const currentToBlock = Math.min(currentFromBlock + currentBlockRange, resolvedToBlock)
+    const params = {
+      fromBlock: currentFromBlock,
+      toBlock: currentToBlock
+    }
+
+    if (filter) {
+      params.filter = filter
+    }
+
+    try {
+      const part = await contract.getPastEvents(eventName, params)
+      if (part?.length) {
+        events.push(...part)
+      }
+
+      currentFromBlock = currentToBlock + 1
+      retries = 0
+    } catch (err) {
+      if (isBlockRangeTooLargeError(err) && currentBlockRange > MIN_LOG_BLOCK_RANGE) {
+        currentBlockRange = Math.max(MIN_LOG_BLOCK_RANGE, Math.floor(currentBlockRange / 2))
+        continue
+      }
+
+      if (retries < TRANSIENT_RETRIES) {
+        retries += 1
+        await sleep(300)
+        continue
+      }
+
+      throw err
+    }
+  }
+
+  return events
+}
+
+async function getPastEventsCachedAndChunked({
+  netId,
+  contract,
+  web3,
+  eventName,
+  fromBlock,
+  toBlock = 'latest',
+  filter,
+  blockRange = DEFAULT_LOG_BLOCK_RANGE
+}) {
+  const resolvedToBlock = toBlock === 'latest' ? await web3.eth.getBlockNumber() : Number(toBlock)
+  const normalizedFromBlock = Number(fromBlock)
+
+  if (
+    !Number.isFinite(normalizedFromBlock) ||
+    !Number.isFinite(resolvedToBlock) ||
+    normalizedFromBlock > resolvedToBlock
+  ) {
+    return []
+  }
+
+  const { events: cachedEvents, cacheLastBlock } = await getGovernanceEventsFromCache({
+    netId,
+    eventName,
+    fromBlock: normalizedFromBlock,
+    toBlock: resolvedToBlock,
+    filter
+  })
+
+  let rpcFromBlock = normalizedFromBlock
+
+  if (Number.isFinite(cacheLastBlock)) {
+    rpcFromBlock = Math.max(rpcFromBlock, Number(cacheLastBlock) + 1)
+  }
+
+  let rpcEvents = []
+
+  if (rpcFromBlock <= resolvedToBlock) {
+    rpcEvents = await getPastEventsChunked({
+      contract,
+      web3,
+      eventName,
+      fromBlock: rpcFromBlock,
+      toBlock: resolvedToBlock,
+      filter,
+      blockRange
+    })
+  }
+
+  return cachedEvents.concat(rpcEvents)
+}
 
 const parseComment = (calldata, govInstance) => {
   const empty = { contact: '', message: '' }
@@ -180,13 +310,18 @@ const actions = {
 
     const netId = rootGetters['metamask/netId']
     const govInstance = rootGetters['governance/gov/govContract']({ netId })
+    const web3 = rootGetters['governance/gov/getWeb3']({ netId })
 
     if (comments[0]?.id === proposal.id) {
       fromBlock = comments[0].blockNumber + 1
     }
 
     try {
-      let votedEvents = await govInstance.getPastEvents('Voted', {
+      let votedEvents = await getPastEventsCachedAndChunked({
+        netId,
+        contract: govInstance,
+        web3,
+        eventName: 'Voted',
         filter: {
           // support: [false],
           proposalId: proposal.id

@@ -232,7 +232,7 @@ class EventService {
     }
   }
 
-  async getEventsPartFromRpc({ fromBlock, toBlock, type }) {
+  async getEventsPartFromRpc({ fromBlock, toBlock, type, throwOnError = false }) {
     try {
       const { currentBlockNumber } = await this.getBlocksDiff({ fromBlock })
 
@@ -259,45 +259,55 @@ class EventService {
         lastBlock: events[events.length - 1].blockNumber
       }
     } catch (err) {
+      if (throwOnError) {
+        throw err
+      }
       return undefined
     }
   }
 
   async getBatchEventsFromRpc({ fromBlock, type }) {
     try {
-      const blockRange = 4950
-      const { blockDifference, currentBlockNumber } = await this.getBlocksDiff({ fromBlock })
-
-      let numberParts = blockDifference === 0 ? 1 : Math.ceil(blockDifference / blockRange)
-      const part = Math.ceil(blockDifference / numberParts)
-
+      const defaultBlockRange = Number(this.netId) === 56 ? 4950 : 4000
+      const minBlockRange = 25
+      const { currentBlockNumber } = await this.getBlocksDiff({ fromBlock })
       let events = []
-      let toBlock = fromBlock + part
+      let currentFromBlock = Number(fromBlock)
+      let currentBlockRange = defaultBlockRange
 
-      if (fromBlock < currentBlockNumber) {
-        if (toBlock >= currentBlockNumber) {
-          toBlock = 'latest'
-          numberParts = 1
-        }
+      if (currentFromBlock < currentBlockNumber) {
+        while (currentFromBlock <= currentBlockNumber) {
+          const currentToBlock = Math.min(currentFromBlock + currentBlockRange, currentBlockNumber)
 
-        for (let i = 0; i < numberParts; i++) {
           try {
             await sleep(200)
-            const partOfEvents = await this.getEventsPartFromRpc({ fromBlock, toBlock, type })
+            const partOfEvents = await this.getEventsPartFromRpc({
+              fromBlock: currentFromBlock,
+              toBlock: currentToBlock,
+              type,
+              throwOnError: true
+            })
+
             if (partOfEvents) {
               events = events.concat(partOfEvents.events)
             }
-            fromBlock = toBlock
-            toBlock += part
-          } catch {
-            numberParts = numberParts + 1
+
+            currentFromBlock = currentToBlock + 1
+            currentBlockRange = defaultBlockRange
+          } catch (err) {
+            if (currentBlockRange <= minBlockRange) {
+              console.error('getBatchEventsFromRpc has error:', err.message)
+              currentFromBlock = currentToBlock + 1
+              continue
+            }
+
+            currentBlockRange = Math.max(minBlockRange, Math.floor(currentBlockRange / 2))
           }
         }
-        if (events.length) {
-          return {
-            events,
-            lastBlock: toBlock === 'latest' ? currentBlockNumber : toBlock
-          }
+
+        return {
+          events,
+          lastBlock: currentBlockNumber
         }
       }
       return undefined
@@ -308,16 +318,8 @@ class EventService {
 
   async getEventsFromRpc({ fromBlock, type }) {
     try {
-      let events
-
-      if (Number(this.netId) === 56) {
-        const rpcEvents = await this.getBatchEventsFromRpc({ fromBlock, type })
-        events = rpcEvents?.events || []
-      } else {
-        const rpcEvents = await this.getEventsPartFromRpc({ fromBlock, toBlock: 'latest', type })
-        events = rpcEvents?.events || []
-      }
-      return events
+      const rpcEvents = await this.getBatchEventsFromRpc({ fromBlock, type })
+      return rpcEvents?.events || []
     } catch (err) {
       return []
     }

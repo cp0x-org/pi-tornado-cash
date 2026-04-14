@@ -479,36 +479,36 @@ const actions = {
         deployedBlock = lastSyncBlock
       }
 
-      const blockDifference = Math.ceil(currentBlockNumber - deployedBlock)
-      const divisor = hasCache ? 2 : 10
+      const defaultBlockRange = Number(netId) === 56 ? 4950 : 4000
+      const minBlockRange = 25
 
-      let blockRange = blockDifference > divisor ? blockDifference / divisor : blockDifference
+      let fromBlock = Number(deployedBlock)
+      let currentBlockRange = defaultBlockRange
 
-      if (Number(netId) === 56) {
-        blockRange = 4950
-      }
+      while (fromBlock <= currentBlockNumber) {
+        const toBlock = Math.min(fromBlock + currentBlockRange, currentBlockNumber)
 
-      let numberParts = blockDifference === 0 ? 1 : Math.ceil(blockDifference / blockRange)
-      const part = Math.ceil(blockDifference / numberParts)
+        try {
+          const partOfEvents = await contractInstance.getPastEvents('EncryptedNote', {
+            toBlock,
+            fromBlock
+          })
 
-      let fromBlock = deployedBlock
-      let toBlock = deployedBlock + part
+          if (partOfEvents) {
+            events = events.concat(partOfEvents)
+          }
 
-      if (toBlock >= currentBlockNumber || toBlock === deployedBlock) {
-        toBlock = 'latest'
-        numberParts = 1
-      }
+          fromBlock = toBlock + 1
+          currentBlockRange = defaultBlockRange
+        } catch (err) {
+          if (currentBlockRange <= minBlockRange) {
+            console.error('getEncryptedNotes chunk has error:', err.message)
+            fromBlock = toBlock + 1
+            continue
+          }
 
-      for (let i = 0; i < numberParts; i++) {
-        const partOfEvents = await contractInstance.getPastEvents('EncryptedNote', {
-          toBlock,
-          fromBlock
-        })
-        if (partOfEvents) {
-          events = events.concat(partOfEvents)
+          currentBlockRange = Math.max(minBlockRange, Math.floor(currentBlockRange / 2))
         }
-        fromBlock = toBlock
-        toBlock += part
       }
 
       if (events && events.length) {
