@@ -10,7 +10,7 @@ import { CHUNK_COUNT_PER_BATCH_REQUEST } from '@/constants'
 import { getGovernanceEventsFromCache } from '@/services/governanceCache'
 
 const { toWei, fromWei, toBN } = require('web3-utils')
-const DEFAULT_LOG_BLOCK_RANGE = 1000
+const DEFAULT_LOG_BLOCK_RANGE = 500
 const MIN_LOG_BLOCK_RANGE = 25
 const TRANSIENT_RETRIES = 2
 
@@ -20,8 +20,8 @@ const CACHE_BLOCK = {}
 const sleep = (ms) => new Promise((resolve) => setTimeout(resolve, ms))
 
 const isBlockRangeTooLargeError = (err) => {
-  const message = (err?.message || '').toLowerCase()
-
+  if (err?.code === -32062 || err?.data?.code === -32062) return true
+  const message = (err?.message || err?.data?.message || '').toLowerCase()
   return (
     message.includes('block range is too large') ||
     message.includes('max block range') ||

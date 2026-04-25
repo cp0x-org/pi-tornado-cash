@@ -25,27 +25,49 @@ class RelayerRegister {
   }
 
   fetchEvents = async (fromBlock, toBlock) => {
-    if (fromBlock <= toBlock) {
+    const isBlockRangeTooLargeError = (err) => {
+      if (err?.code === -32062 || err?.data?.code === -32062) return true
+      const message = (err?.message || err?.data?.message || '').toLowerCase()
+      return (
+        message.includes('block range is too large') ||
+        message.includes('max block range') ||
+        message.includes('maximum block range') ||
+        message.includes('exceed maximum') ||
+        message.includes('query returned more than')
+      )
+    }
+
+    const defaultBlockRange = 500
+    const minBlockRange = 25
+    let currentBlockRange = defaultBlockRange
+    let currentFrom = fromBlock
+    const events = []
+
+    while (currentFrom <= toBlock) {
+      const currentTo = Math.min(currentFrom + currentBlockRange, toBlock)
       try {
-        const registeredEventsPart = await this.relayerRegistry.getPastEvents('RelayerRegistered', {
-          fromBlock,
-          toBlock
+        const part = await this.relayerRegistry.getPastEvents('RelayerRegistered', {
+          fromBlock: currentFrom,
+          toBlock: currentTo
         })
-
-        return registeredEventsPart
-      } catch (error) {
-        const midBlock = (fromBlock + toBlock) >> 1
-
-        if (midBlock - fromBlock < 2) {
-          throw new Error(`error fetching events: ${error.message}`)
+        if (part) events.push(...part)
+        currentFrom = currentTo + 1
+        currentBlockRange = defaultBlockRange
+      } catch (err) {
+        if (isBlockRangeTooLargeError(err) && currentBlockRange > minBlockRange) {
+          currentBlockRange = Math.max(minBlockRange, Math.floor(currentBlockRange / 2))
+          continue
         }
-
-        const arr1 = await this.fetchEvents(fromBlock, midBlock)
-        const arr2 = await this.fetchEvents(midBlock + 1, toBlock)
-        return [...arr1, ...arr2]
+        if (currentBlockRange <= minBlockRange) {
+          console.error(`fetchEvents chunk error: ${err.message}`)
+          currentFrom = currentTo + 1
+          continue
+        }
+        currentBlockRange = Math.max(minBlockRange, Math.floor(currentBlockRange / 2))
       }
     }
-    return []
+
+    return events
   }
 
   saveEvents = async ({ events, lastSyncBlock, storeName }) => {

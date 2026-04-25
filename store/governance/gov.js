@@ -12,15 +12,15 @@ import AggregatorABI from '@/abis/Aggregator.abi.json'
 import { getGovernanceEventsFromCache } from '@/services/governanceCache'
 
 const { numberToHex, toWei, fromWei, toBN, hexToNumber, hexToNumberString } = require('web3-utils')
-const DEFAULT_LOG_BLOCK_RANGE = 1000
+const DEFAULT_LOG_BLOCK_RANGE = 500
 const MIN_LOG_BLOCK_RANGE = 25
 const TRANSIENT_RETRIES = 2
 
 const sleep = (ms) => new Promise((resolve) => setTimeout(resolve, ms))
 
 const isBlockRangeTooLargeError = (err) => {
-  const message = (err?.message || '').toLowerCase()
-
+  if (err?.code === -32062 || err?.data?.code === -32062) return true
+  const message = (err?.message || err?.data?.message || '').toLowerCase()
   return (
     message.includes('block range is too large') ||
     message.includes('max block range') ||

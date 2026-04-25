@@ -34,6 +34,12 @@ const modifyHtml = (html) => {
 }
 
 export default {
+  watchers: {
+    webpack: {
+      poll: 1000,
+      aggregateTimeout: 300
+    }
+  },
   target: 'static',
   ssr: false,
   /*
@@ -237,7 +243,8 @@ export default {
   },
 
   provider: {
-    rpcUrl: `https://mainnet.infura.io/v3/${process.env.INFURA_KEY}`
+    // rpcUrl: `https://mainnet.infura.io/v3/${process.env.INFURA_KEY}`
+    rpcUrl: `https://rpc.ankr.com/eth/47bc999735174156f83a6beedf6ebe21b176ce5557722134222ac721f8761c2a`
   },
 
   // todo make custom loading page

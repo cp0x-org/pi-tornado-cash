@@ -479,7 +479,19 @@ const actions = {
         deployedBlock = lastSyncBlock
       }
 
-      const defaultBlockRange = Number(netId) === 56 ? 4950 : 4000
+      const isBlockRangeTooLargeError = (err) => {
+        if (err?.code === -32062 || err?.data?.code === -32062) return true
+        const message = (err?.message || err?.data?.message || '').toLowerCase()
+        return (
+          message.includes('block range is too large') ||
+          message.includes('max block range') ||
+          message.includes('maximum block range') ||
+          message.includes('exceed maximum') ||
+          message.includes('query returned more than')
+        )
+      }
+
+      const defaultBlockRange = 500
       const minBlockRange = 25
 
       let fromBlock = Number(deployedBlock)
@@ -501,6 +513,11 @@ const actions = {
           fromBlock = toBlock + 1
           currentBlockRange = defaultBlockRange
         } catch (err) {
+          if (isBlockRangeTooLargeError(err) && currentBlockRange > minBlockRange) {
+            currentBlockRange = Math.max(minBlockRange, Math.floor(currentBlockRange / 2))
+            continue
+          }
+
           if (currentBlockRange <= minBlockRange) {
             console.error('getEncryptedNotes chunk has error:', err.message)
             fromBlock = toBlock + 1

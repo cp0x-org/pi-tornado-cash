@@ -8,17 +8,17 @@ import networkConfig from '../networkConfig'
 import GovernanceABI from '../abis/Governance.abi.json'
 
 const CACHE_DIR = './static/governance-cache'
-const DEFAULT_BLOCK_RANGE = 20000
+const DEFAULT_BLOCK_RANGE = 500
 const MIN_BLOCK_RANGE = 25
-const MAX_BLOCK_RANGE = 120000
+const MAX_BLOCK_RANGE = 500
 const TRANSIENT_RETRIES = 3
 const EVENTS = ['ProposalCreated', 'Delegated', 'Undelegated', 'Voted']
 
 const sleep = (ms) => new Promise((resolve) => setTimeout(resolve, ms))
 
 const isBlockRangeTooLargeError = (error) => {
-  const message = ((error && error.message) || '').toLowerCase()
-
+  if (error?.code === -32062 || error?.data?.code === -32062) return true
+  const message = ((error && (error.message || error?.data?.message)) || '').toLowerCase()
   return (
     message.includes('block range is too large') ||
     message.includes('max block range') ||

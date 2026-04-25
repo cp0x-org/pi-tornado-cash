@@ -166,35 +166,50 @@ class EventService {
       return events
     }
 
-    const blockRange = 3950
-    const fromBlock = deployedBlock
-    const { blockDifference, currentBlockNumber } = await this.getBlocksDiff({ fromBlock })
+    const isBlockRangeTooLargeError = (err) => {
+      if (err?.code === -32062 || err?.data?.code === -32062) return true
+      const message = (err?.message || err?.data?.message || '').toLowerCase()
+      return (
+        message.includes('block range is too large') ||
+        message.includes('max block range') ||
+        message.includes('maximum block range') ||
+        message.includes('exceed maximum') ||
+        message.includes('query returned more than')
+      )
+    }
 
-    let numberParts = blockDifference === 0 ? 1 : Math.ceil(blockDifference / blockRange)
-    const part = Math.ceil(blockDifference / numberParts)
+    const fromBlock = deployedBlock
+    const { currentBlockNumber } = await this.getBlocksDiff({ fromBlock })
+
+    let currentBlockRange = 500
+    const minBlockRange = 25
 
     let events = []
     let toBlock = currentBlockNumber
 
     if (fromBlock < currentBlockNumber) {
-      for (let i = 0; i < numberParts; i++) {
+      while (toBlock > fromBlock && eventsCount > events.length) {
+        const chunkFrom = Math.max(toBlock - currentBlockRange, fromBlock)
         try {
           await sleep(200)
           const partOfEvents = await this.getEventsPartFromRpc({
-            fromBlock: toBlock - part,
+            fromBlock: chunkFrom,
             toBlock,
-            type: eventsType.DEPOSIT
+            type: eventsType.DEPOSIT,
+            throwOnError: true
           })
 
           if (partOfEvents) {
-            events = events.concat(partOfEvents.events)
-            if (eventsCount <= events.length) {
-              break
-            }
+            events = partOfEvents.events.concat(events)
           }
-          toBlock -= part
-        } catch {
-          numberParts = numberParts + 1
+          toBlock = chunkFrom - 1
+          currentBlockRange = 500
+        } catch (err) {
+          if (isBlockRangeTooLargeError(err) && currentBlockRange > minBlockRange) {
+            currentBlockRange = Math.max(minBlockRange, Math.floor(currentBlockRange / 2))
+          } else {
+            toBlock = chunkFrom - 1
+          }
         }
       }
       if (eventsCount !== events.length) {
@@ -267,8 +282,20 @@ class EventService {
   }
 
   async getBatchEventsFromRpc({ fromBlock, type }) {
+    const isBlockRangeTooLargeError = (err) => {
+      if (err?.code === -32062 || err?.data?.code === -32062) return true
+      const message = (err?.message || err?.data?.message || '').toLowerCase()
+      return (
+        message.includes('block range is too large') ||
+        message.includes('max block range') ||
+        message.includes('maximum block range') ||
+        message.includes('exceed maximum') ||
+        message.includes('query returned more than')
+      )
+    }
+
     try {
-      const defaultBlockRange = Number(this.netId) === 56 ? 4950 : 4000
+      const defaultBlockRange = 500
       const minBlockRange = 25
       const { currentBlockNumber } = await this.getBlocksDiff({ fromBlock })
       let events = []
@@ -295,6 +322,11 @@ class EventService {
             currentFromBlock = currentToBlock + 1
             currentBlockRange = defaultBlockRange
           } catch (err) {
+            if (isBlockRangeTooLargeError(err) && currentBlockRange > minBlockRange) {
+              currentBlockRange = Math.max(minBlockRange, Math.floor(currentBlockRange / 2))
+              continue
+            }
+
             if (currentBlockRange <= minBlockRange) {
               console.error('getBatchEventsFromRpc has error:', err.message)
               currentFromBlock = currentToBlock + 1
