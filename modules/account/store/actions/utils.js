@@ -24,45 +24,63 @@ async function getEventsFromBlockPart({ echoContract, address, currentBlockNumbe
 
     let { NOTE_ACCOUNT_BLOCK: fromBlock } = networkConfig[`netId${netId}`].constants
     if (lastSyncBlock) {
-      fromBlock = lastSyncBlock
+      fromBlock = lastSyncBlock + 1
     }
 
-    const blockDifference = Math.ceil(currentBlockNumber - lastSyncBlock)
-
-    let blockRange = blockDifference
-
-    if (Number(netId) === 56) {
-      blockRange = 4950
+    const isBlockRangeTooLargeError = (err) => {
+      if (err?.code === -32062 || err?.data?.code === -32062) return true
+      const message = (err?.message || err?.data?.message || '').toLowerCase()
+      return (
+        message.includes('block range is too large') ||
+        message.includes('max block range') ||
+        message.includes('maximum block range') ||
+        message.includes('exceed maximum') ||
+        message.includes('query returned more than')
+      )
     }
 
-    let numberParts = blockDifference === 0 ? 1 : Math.ceil(blockDifference / blockRange)
-    const part = Math.ceil(blockDifference / numberParts)
+    const defaultBlockRange = 500
+    const minBlockRange = 25
 
     let events = []
+    let currentFromBlock = Number(fromBlock)
+    let currentBlockRange = defaultBlockRange
 
-    let toBlock = lastSyncBlock + part
+    while (currentFromBlock <= currentBlockNumber) {
+      const currentToBlock = Math.min(currentFromBlock + currentBlockRange, currentBlockNumber)
 
-    if (toBlock >= currentBlockNumber) {
-      toBlock = 'latest'
-      numberParts = 1
-    }
+      try {
+        const partOfEvents = await echoContract.getEvents({
+          fromBlock: currentFromBlock,
+          toBlock: currentToBlock,
+          address
+        })
 
-    for (let i = 0; i < numberParts; i++) {
-      const partOfEvents = await echoContract.getEvents({
-        fromBlock,
-        toBlock,
-        address
-      })
-      if (partOfEvents) {
-        events = events.concat(
-          partOfEvents.map((event) => ({
-            address: event.returnValues.who,
-            encryptedAccount: event.returnValues.data
-          }))
-        )
+        if (partOfEvents) {
+          events = events.concat(
+            partOfEvents.map((event) => ({
+              address: event.returnValues.who,
+              encryptedAccount: event.returnValues.data
+            }))
+          )
+        }
+
+        currentFromBlock = currentToBlock + 1
+        currentBlockRange = defaultBlockRange
+      } catch (err) {
+        if (isBlockRangeTooLargeError(err) && currentBlockRange > minBlockRange) {
+          currentBlockRange = Math.max(minBlockRange, Math.floor(currentBlockRange / 2))
+          continue
+        }
+
+        if (currentBlockRange <= minBlockRange) {
+          console.error(`getEventsFromBlockPart has error: ${err.message}`)
+          currentFromBlock = currentToBlock + 1
+          continue
+        }
+
+        currentBlockRange = Math.max(minBlockRange, Math.floor(currentBlockRange / 2))
       }
-      fromBlock = toBlock
-      toBlock += part
     }
 
     events = graphEvents.concat(events)

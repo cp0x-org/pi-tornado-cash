@@ -285,46 +285,93 @@ export const actions = {
   async pickRandomRelayer({ rootGetters, commit, dispatch, getters }) {
     const netId = rootGetters['metamask/netId']
     const { ensSubdomainKey } = rootGetters['metamask/networkConfig']
+    const { presetRelayerUrl } = networkConfig[`netId${netId}`] || {}
 
     commit('SET_IS_LOADING_RELAYERS', true)
 
-    const registeredRelayers = await relayerRegisterService(getters.ethProvider).getRelayers(ensSubdomainKey)
+    const runDefaultLogic = async () => {
+      const registeredRelayers = await relayerRegisterService(getters.ethProvider).getRelayers(
+        ensSubdomainKey
+      )
 
-    const requests = []
-    for (const registeredRelayer of registeredRelayers) {
-      requests.push(dispatch('observeRelayer', { relayer: registeredRelayer }))
+      const requests = []
+      for (const registeredRelayer of registeredRelayers) {
+        requests.push(dispatch('observeRelayer', { relayer: registeredRelayer }))
+      }
+      let statuses = await Promise.all(requests)
+
+      statuses = statuses.filter((status) => status.isValid)
+      // const validRelayerENSnames = statuses.map((relayer) => relayer.name)
+      commit('SAVE_VALIDATED_RELAYERS', statuses)
+      console.log('filtered statuses ', statuses)
+
+      try {
+        const {
+          name,
+          realUrl,
+          address,
+          ethPrices,
+          stakeBalance,
+          tornadoServiceFee
+        } = pickWeightedRandomRelayer(statuses, netId)
+
+        console.log('Selected relayer', name, tornadoServiceFee)
+        commit('SET_SELECTED_RELAYER', {
+          name,
+          address,
+          ethPrices,
+          url: realUrl,
+          stakeBalance,
+          tornadoServiceFee
+        })
+      } catch {
+        console.error('Method pickRandomRelayer has not picked relayer')
+      }
     }
-    let statuses = await Promise.all(requests)
-
-    statuses = statuses.filter((status) => status.isValid)
-    // const validRelayerENSnames = statuses.map((relayer) => relayer.name)
-    commit('SAVE_VALIDATED_RELAYERS', statuses)
-    console.log('filtered statuses ', statuses)
 
     try {
-      const {
-        name,
-        realUrl,
-        address,
-        ethPrices,
-        stakeBalance,
-        tornadoServiceFee
-      } = pickWeightedRandomRelayer(statuses, netId)
+      if (presetRelayerUrl) {
+        try {
+          let hostname = presetRelayerUrl
+          if (/^https?:\/\//i.test(hostname)) {
+            hostname = new URL(presetRelayerUrl).host
+          }
 
-      console.log('Selected relayer', name, tornadoServiceFee)
-      commit('SET_SELECTED_RELAYER', {
-        name,
-        address,
-        ethPrices,
-        url: realUrl,
-        stakeBalance,
-        tornadoServiceFee
-      })
-    } catch {
-      console.error('Method pickRandomRelayer has not picked relayer')
+          const result = await dispatch('askRelayerStatus', {
+            hostname,
+            ensName: 'custom',
+            stakeBalance: '0'
+          })
+
+          if (result.isValid) {
+            console.log('Using preset relayer', presetRelayerUrl)
+            commit('SAVE_VALIDATED_RELAYERS', [result])
+            commit('SET_SELECTED_RELAYER', {
+              name: result.name,
+              address: result.address,
+              ethPrices: result.ethPrices,
+              url: result.realUrl,
+              stakeBalance: result.stakeBalance,
+              tornadoServiceFee: result.tornadoServiceFee
+            })
+          } else {
+            console.error(
+              `[presetRelayer] "${presetRelayerUrl}" unavailable: ${result.error}. Falling back to default relayer selection.`
+            )
+            await runDefaultLogic()
+          }
+        } catch (e) {
+          console.error(
+            `[presetRelayer] "${presetRelayerUrl}" error: ${e.message}. Falling back to default relayer selection.`
+          )
+          await runDefaultLogic()
+        }
+      } else {
+        await runDefaultLogic()
+      }
+    } finally {
+      commit('SET_IS_LOADING_RELAYERS', false)
     }
-
-    commit('SET_IS_LOADING_RELAYERS', false)
   },
   async getKnownRelayerData({ rootGetters, getters }, { relayerAddress, name }) {
     const { ensSubdomainKey } = rootGetters['metamask/networkConfig']

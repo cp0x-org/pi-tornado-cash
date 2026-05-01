@@ -1,25 +1,28 @@
 <template>
-  <div class="has-text-centered">
-    <ErrorIcon :is404="statusCode === 404" />
-    <h1 class="title is-1">{{ $t('errorPage.title') }}</h1>
-    <template v-if="statusCode === 204">
-      <p class="p mb-6">
-        {{
-          $t('errorPage.switchNetwork.description', {
-            pageName: $t(`errorPage.switchNetwork.pageName.${error.pageName}`)
-          })
-        }}
-      </p>
-      <b-button type="is-primary" icon-left="logo" outlined @click="handleSwitchNetwork">{{
-        $t('errorPage.switchNetwork.button')
-      }}</b-button>
-    </template>
-    <template v-else>
-      <p class="p mb-6">{{ $t('errorPage.description') }}</p>
-      <b-button type="is-primary" icon-left="logo" outlined @click="handleRedirect">{{
-        $t('errorPage.button')
-      }}</b-button>
-    </template>
+  <div>
+<!--    <SiteAnnouncement />-->
+    <div class="has-text-centered">
+      <ErrorIcon :is404="statusCode === 404" />
+      <h1 class="title is-1">{{ $t('errorPage.title') }}</h1>
+      <template v-if="statusCode === 204">
+        <p class="p mb-6">
+          {{
+            $t('errorPage.switchNetwork.description', {
+              pageName: $t(`errorPage.switchNetwork.pageName.${error.pageName}`)
+            })
+          }}
+        </p>
+        <b-button type="is-primary" icon-left="logo" outlined @click="handleSwitchNetwork">{{
+          $t('errorPage.switchNetwork.button')
+        }}</b-button>
+      </template>
+      <template v-else>
+        <p class="p mb-6">{{ $t('errorPage.description') }}</p>
+        <b-button type="is-primary" icon-left="logo" outlined @click="handleRedirect">{{
+          $t('errorPage.button')
+        }}</b-button>
+      </template>
+    </div>
   </div>
 </template>
 <script>
@@ -27,11 +30,13 @@ import { mapActions } from 'vuex'
 
 import { sleep } from '@/utils'
 import { ErrorIcon } from '@/components/icons'
+import SiteAnnouncement from '@/components/SiteAnnouncement'
 
 export default {
   name: 'ErrorPage',
   components: {
-    ErrorIcon
+    ErrorIcon,
+    SiteAnnouncement
   },
   props: {
     error: {

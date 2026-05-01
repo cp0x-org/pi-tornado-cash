@@ -20,7 +20,7 @@ const link = ({ getContext }) => {
 }
 
 const CHAIN_GRAPH_URLS = {
-  1: 'https://gateway.thegraph.com/api/8b164501e1862078eff5fb9dda136c6c/subgraphs/id/Ec6fVMDVqXTDQZ3c4jxcyV3zBXqkdgMWfhdtCgtqn7Sh',
+  1: 'https://gateway.thegraph.com/api/22fff305c594b60259fbc8e6ee00a8b3/subgraphs/id/Ec6fVMDVqXTDQZ3c4jxcyV3zBXqkdgMWfhdtCgtqn7Sh',
   5: 'https://api.thegraph.com/subgraphs/name/tornadocash/goerli-tornado-subgraph',
   10: 'https://gateway.thegraph.com/api/d2db349f28c895aa2272421996404c8d/subgraphs/id/GvkbnEVhLD6KArXpEzLFtSKRmspBW29ApKFqR5FjuP2P',
   56: 'https://gateway.thegraph.com/api/30503850823438e04497429381e416f7/subgraphs/id/CiwGzefDBZCavXRPnwarnnF8xDDoLw4boBuySomJWYnV',
@@ -45,7 +45,7 @@ const client = new ApolloClient({
 
 const registryClient = new ApolloClient({
   uri:
-    'https://gateway.thegraph.com/api/c978a2a9a36f30ba63457b707e821e6c/subgraphs/id/DgKwfAbLfynpiq7fDJy59LDnVnia4Y5nYeRDBYi9qezc',
+    'https://gateway.thegraph.com/api/22fff305c594b60259fbc8e6ee00a8b3/subgraphs/id/DgKwfAbLfynpiq7fDJy59LDnVnia4Y5nYeRDBYi9qezc',
   cache: new InMemoryCache(),
   defaultOptions
 })

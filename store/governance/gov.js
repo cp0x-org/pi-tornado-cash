@@ -9,8 +9,138 @@ import networkConfig from '../../networkConfig'
 
 import GovernanceABI from '@/abis/Governance.abi.json'
 import AggregatorABI from '@/abis/Aggregator.abi.json'
+import { getGovernanceEventsFromCache } from '@/services/governanceCache'
 
 const { numberToHex, toWei, fromWei, toBN, hexToNumber, hexToNumberString } = require('web3-utils')
+const DEFAULT_LOG_BLOCK_RANGE = 500
+const MIN_LOG_BLOCK_RANGE = 25
+const TRANSIENT_RETRIES = 2
+
+const sleep = (ms) => new Promise((resolve) => setTimeout(resolve, ms))
+
+const isBlockRangeTooLargeError = (err) => {
+  if (err?.code === -32062 || err?.data?.code === -32062) return true
+  const message = (err?.message || err?.data?.message || '').toLowerCase()
+  return (
+    message.includes('block range is too large') ||
+    message.includes('max block range') ||
+    message.includes('maximum block range') ||
+    message.includes('exceed maximum')
+  )
+}
+
+async function getPastEventsChunked({
+  contract,
+  web3,
+  eventName,
+  fromBlock,
+  toBlock = 'latest',
+  filter,
+  blockRange = DEFAULT_LOG_BLOCK_RANGE
+}) {
+  const resolvedToBlock = toBlock === 'latest' ? await web3.eth.getBlockNumber() : Number(toBlock)
+  let currentFromBlock = Number(fromBlock)
+  let currentBlockRange = blockRange
+  const events = []
+  let retries = 0
+
+  if (
+    !Number.isFinite(currentFromBlock) ||
+    !Number.isFinite(resolvedToBlock) ||
+    currentFromBlock > resolvedToBlock
+  ) {
+    return events
+  }
+
+  while (currentFromBlock <= resolvedToBlock) {
+    const currentToBlock = Math.min(currentFromBlock + currentBlockRange, resolvedToBlock)
+    const params = {
+      fromBlock: currentFromBlock,
+      toBlock: currentToBlock
+    }
+
+    if (filter) {
+      params.filter = filter
+    }
+
+    try {
+      const part = await contract.getPastEvents(eventName, params)
+      if (part?.length) {
+        events.push(...part)
+      }
+
+      currentFromBlock = currentToBlock + 1
+      retries = 0
+    } catch (err) {
+      if (isBlockRangeTooLargeError(err) && currentBlockRange > MIN_LOG_BLOCK_RANGE) {
+        currentBlockRange = Math.max(MIN_LOG_BLOCK_RANGE, Math.floor(currentBlockRange / 2))
+        continue
+      }
+
+      if (retries < TRANSIENT_RETRIES) {
+        retries += 1
+        await sleep(300)
+        continue
+      }
+
+      throw err
+    }
+  }
+
+  return events
+}
+
+async function getPastEventsCachedAndChunked({
+  netId,
+  contract,
+  web3,
+  eventName,
+  fromBlock,
+  toBlock = 'latest',
+  filter,
+  blockRange = DEFAULT_LOG_BLOCK_RANGE
+}) {
+  const resolvedToBlock = toBlock === 'latest' ? await web3.eth.getBlockNumber() : Number(toBlock)
+  const normalizedFromBlock = Number(fromBlock)
+
+  if (
+    !Number.isFinite(normalizedFromBlock) ||
+    !Number.isFinite(resolvedToBlock) ||
+    normalizedFromBlock > resolvedToBlock
+  ) {
+    return []
+  }
+
+  const { events: cachedEvents, cacheLastBlock } = await getGovernanceEventsFromCache({
+    netId,
+    eventName,
+    fromBlock: normalizedFromBlock,
+    toBlock: resolvedToBlock,
+    filter
+  })
+
+  let rpcFromBlock = normalizedFromBlock
+
+  if (Number.isFinite(cacheLastBlock)) {
+    rpcFromBlock = Math.max(rpcFromBlock, Number(cacheLastBlock) + 1)
+  }
+
+  let rpcEvents = []
+
+  if (rpcFromBlock <= resolvedToBlock) {
+    rpcEvents = await getPastEventsChunked({
+      contract,
+      web3,
+      eventName,
+      fromBlock: rpcFromBlock,
+      toBlock: resolvedToBlock,
+      filter,
+      blockRange
+    })
+  }
+
+  return cachedEvents.concat(rpcEvents)
+}
 
 const state = () => {
   return {
@@ -651,6 +781,7 @@ const actions = {
       const netId = rootGetters['metamask/netId']
       const aggregatorContract = getters.aggregatorContract
       const govInstance = getters.govContract({ netId })
+      const web3 = getters.getWeb3({ netId })
       const config = getters.getConfig({ netId })
 
       if (!govInstance) {
@@ -658,7 +789,11 @@ const actions = {
       }
 
       const [events, statuses] = await Promise.all([
-        govInstance.getPastEvents('ProposalCreated', {
+        getPastEventsCachedAndChunked({
+          netId,
+          contract: govInstance,
+          web3,
+          eventName: 'ProposalCreated',
           fromBlock: config.constants.GOVERNANCE_BLOCK,
           toBlock: 'latest'
         }),
@@ -809,23 +944,30 @@ const actions = {
 
       const netId = rootGetters['metamask/netId']
       const config = getters.getConfig({ netId })
+      const web3 = getters.getWeb3({ netId })
 
       const aggregatorContract = getters.aggregatorContract
       const govInstance = getters.govContract({ netId })
-      let delegatedAccs = await govInstance.getPastEvents('Delegated', {
-        filter: {
-          to: ethAccount
-        },
-        fromBlock: config.constants.GOVERNANCE_BLOCK,
-        toBlock: 'latest'
-      })
-      let undelegatedAccs = await govInstance.getPastEvents('Undelegated', {
-        filter: {
-          from: ethAccount
-        },
-        fromBlock: config.constants.GOVERNANCE_BLOCK,
-        toBlock: 'latest'
-      })
+      let [delegatedAccs, undelegatedAccs] = await Promise.all([
+        getPastEventsCachedAndChunked({
+          netId,
+          contract: govInstance,
+          web3,
+          eventName: 'Delegated',
+          filter: { to: ethAccount },
+          fromBlock: config.constants.GOVERNANCE_BLOCK,
+          toBlock: 'latest'
+        }),
+        getPastEventsCachedAndChunked({
+          netId,
+          contract: govInstance,
+          web3,
+          eventName: 'Undelegated',
+          filter: { from: ethAccount },
+          fromBlock: config.constants.GOVERNANCE_BLOCK,
+          toBlock: 'latest'
+        })
+      ])
       delegatedAccs = delegatedAccs.map((acc) => acc.returnValues.account)
       undelegatedAccs = undelegatedAccs.map((acc) => acc.returnValues.account)
       const uniq = delegatedAccs.filter((obj, index, self) => {
