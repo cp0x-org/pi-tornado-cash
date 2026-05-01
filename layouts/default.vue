@@ -1,6 +1,6 @@
 <template>
   <div class="wrapper">
-    <SiteAnnouncement />
+<!--    <SiteAnnouncement />-->
     <Navbar />
     <div v-show="mismatchNetwork" class="network has-background-warning">
       {{ $t('pleaseChangeNetwork', { network: netId }) }}

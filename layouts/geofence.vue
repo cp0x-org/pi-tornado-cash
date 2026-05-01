@@ -1,6 +1,6 @@
 <template>
   <div class="wrapper geofence">
-    <SiteAnnouncement />
+<!--    <SiteAnnouncement />-->
     <nav class="navbar header" role="navigation" aria-label="main navigation">
       <div class="container">
         <div class="navbar-brand">
