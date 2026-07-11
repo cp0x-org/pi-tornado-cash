@@ -3,13 +3,13 @@
   "netId": 1,
   "governanceAddress": "0x5efda50f22d34F262c29268506C5Fa42cB56A1Ce",
   "fromBlock": 11474695,
-  "lastBlock": 25511400,
-  "updatedAt": "2026-07-11T19:16:28.772Z",
+  "lastBlock": 25511578,
+  "updatedAt": "2026-07-11T19:51:15.894Z",
   "sync": {
-    "ProposalCreated": 25511400,
-    "Delegated": 25511400,
-    "Undelegated": 25511400,
-    "Voted": 25511400
+    "ProposalCreated": 25511578,
+    "Delegated": 25511578,
+    "Undelegated": 25511578,
+    "Voted": 25511578
   },
   "events": {
     "ProposalCreated": [

@@ -34,6 +34,12 @@ COPY --from=build /app/.nuxt ./.nuxt
 COPY --from=build /app/static ./static
 COPY --from=build /app/nuxt.config.js ./
 
+# Скрипты обновления кешей и их зависимости (нужны контейнеру cache-updater,
+# который использует этот же образ — см. docker-compose.yml)
+COPY --from=build /app/scripts ./scripts
+COPY --from=build /app/abis ./abis
+COPY --from=build /app/networkConfig.js /app/rpcConfig.js ./
+
 ENV NODE_ENV=production
 ENV NUXT_TELEMETRY_DISABLED=1
 ENV HOST=0.0.0.0

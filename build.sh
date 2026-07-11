@@ -15,7 +15,7 @@ echo "Building version $VERSION..."
 docker buildx build \
   --platform $PLATFORMS \
   --build-arg VITE_APP_BASE_NAME=/ \
-  -t cp0x/pi-tornado-cash:$VERSION \
+  -t cp0x/pi-tornadomini-interface:$VERSION \
   --push \
   .
 

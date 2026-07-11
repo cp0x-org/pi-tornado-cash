@@ -14,6 +14,7 @@
     "update:events": "node -r esm scripts/updateEvents.js --network",
     "update:encrypted": "node -r esm scripts/updateEncryptedEvents.js --network",
     "update:governance-cache": "node -r esm scripts/updateGovernanceCache.js --network",
+    "update:caches": "bash scripts/updateCaches.sh",
     "update:tree": "node -r esm scripts/updateTree.js --network",
     "merge:tree-cache": "node -r esm scripts/mergeTreeCache.js --network",
     "generate": "cross-env NODE_OPTIONS=--max-old-space-size=8192 nuxt generate && node -e \"require('fs').copyFileSync('dist/404.html','dist/ipfs-404.html')\"",
