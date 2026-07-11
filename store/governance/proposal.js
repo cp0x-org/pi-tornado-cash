@@ -10,7 +10,7 @@ import { CHUNK_COUNT_PER_BATCH_REQUEST } from '@/constants'
 import { getGovernanceEventsFromCache } from '@/services/governanceCache'
 
 const { toWei, fromWei, toBN } = require('web3-utils')
-const DEFAULT_LOG_BLOCK_RANGE = 500
+const DEFAULT_LOG_BLOCK_RANGE = 10000
 const MIN_LOG_BLOCK_RANGE = 25
 const TRANSIENT_RETRIES = 2
 

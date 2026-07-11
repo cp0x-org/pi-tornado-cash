@@ -12,7 +12,7 @@ import AggregatorABI from '@/abis/Aggregator.abi.json'
 import { getGovernanceEventsFromCache } from '@/services/governanceCache'
 
 const { numberToHex, toWei, fromWei, toBN, hexToNumber, hexToNumberString } = require('web3-utils')
-const DEFAULT_LOG_BLOCK_RANGE = 500
+const DEFAULT_LOG_BLOCK_RANGE = 10000
 const MIN_LOG_BLOCK_RANGE = 25
 const TRANSIENT_RETRIES = 2
 

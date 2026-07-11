@@ -1,6 +1,8 @@
-FROM node:14 AS build
+FROM node:16 AS build
 
 WORKDIR /app
+
+ENV NUXT_TELEMETRY_DISABLED=1
 
 COPY package*.json yarn.lock* ./
 RUN yarn install --frozen-lockfile

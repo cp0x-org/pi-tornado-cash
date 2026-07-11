@@ -1,6 +1,6 @@
 <template>
   <div class="wrapper geofence">
-<!--    <SiteAnnouncement />-->
+    <!-- <SiteAnnouncement /> -->
     <nav class="navbar header" role="navigation" aria-label="main navigation">
       <div class="container">
         <div class="navbar-brand">
@@ -23,13 +23,11 @@
 /* eslint-disable no-console */
 import Logo from '@/components/Logo'
 import Footer from '@/components/Footer'
-import SiteAnnouncement from '@/components/SiteAnnouncement'
 
 export default {
   components: {
     Logo,
-    Footer,
-    SiteAnnouncement
+    Footer
   }
 }
 </script>

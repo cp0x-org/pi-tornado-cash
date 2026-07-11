@@ -1,7 +1,9 @@
 # 1. Build stage
-FROM node:14 AS build
+FROM node:16 AS build
 
 WORKDIR /app
+
+ENV NUXT_TELEMETRY_DISABLED=1
 
 COPY package*.json yarn.lock* ./
 RUN yarn install --frozen-lockfile
@@ -18,16 +20,13 @@ RUN yarn build
 RUN yarn generate
 
 # 2. Runtime stage
-FROM node:14 AS runtime
+FROM node:16 AS runtime
 
 WORKDIR /app
 
 # Ставим все зависимости (можно с --production, но лучше полностью)
 COPY package*.json yarn.lock ./
 RUN yarn install --frozen-lockfile
-
-# Глобально ставим nuxt, чтобы yarn start работал
-RUN yarn global add nuxt@2.14.7
 
 # Копируем сборку
 COPY --from=build /app/dist ./dist
@@ -36,6 +35,7 @@ COPY --from=build /app/static ./static
 COPY --from=build /app/nuxt.config.js ./
 
 ENV NODE_ENV=production
+ENV NUXT_TELEMETRY_DISABLED=1
 ENV HOST=0.0.0.0
 ENV PORT=3000
 ENV NUXT_ENV_BASE_URL=https://tornado.cp0x.com
