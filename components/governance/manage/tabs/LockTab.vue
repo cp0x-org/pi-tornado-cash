@@ -60,7 +60,6 @@ import { mapActions, mapState } from 'vuex'
 import { toWei, fromWei } from 'web3-utils'
 import { BigNumber as BN } from 'bignumber.js'
 
-import { debounce } from '@/utils'
 import NumberFormat from '@/components/NumberFormat'
 
 export default {
@@ -78,17 +77,25 @@ export default {
   computed: {
     ...mapState('torn', ['signature', 'balance', 'allowance']),
     maxAmountToLock() {
-      return fromWei(this.balance)
+      return this.balance ? fromWei(this.balance) : '0'
+    },
+    isValidAmount() {
+      const amount = new BN(this.amountToLock)
+      return !amount.isNaN() && amount.gt(0) && amount.lte(this.maxAmountToLock)
     },
     hasEnoughApproval() {
-      if (Number(this.amountToLock) && new BN(this.allowance).gte(new BN(toWei(this.amountToLock)))) {
+      if (!this.isValidAmount) {
+        return false
+      }
+
+      if (new BN(this.allowance).gte(new BN(toWei(this.amountToLock)))) {
         return true
       }
 
       return Boolean(this.signature.v) && this.signature.amount === this.amountToLock
     },
     disabledApprove() {
-      if (!Number(this.amountToLock) || this.signature.amount === this.amountToLock) {
+      if (!this.isValidAmount || this.signature.amount === this.amountToLock) {
         return true
       }
 
@@ -102,16 +109,15 @@ export default {
       return allowance.gte(amount)
     },
     disabledLock() {
-      return Number(this.amountToLock) && !this.hasEnoughApproval
+      return !this.isValidAmount || !this.hasEnoughApproval
     },
     computedAmountToLock: {
       get() {
         return this.amountToLock
       },
       set(value) {
-        this.amountToLock = this.formatNumber(value)
-
-        debounce(this.validateLock, this.amountToLock)
+        const amount = this.formatNumber(value)
+        this.amountToLock = this.validateAmount(amount, this.maxAmountToLock)
       }
     }
   },
@@ -119,25 +125,31 @@ export default {
     ...mapActions('torn', ['signApprove']),
     ...mapActions('governance/gov', ['lock', 'lockWithApproval']),
     async onApprove() {
-      this.$store.dispatch('loading/enable', { message: this.$t('preparingTransactionData') })
-      await this.signApprove({ amount: this.amountToLock })
-      this.$store.dispatch('loading/disable')
+      try {
+        this.$store.dispatch('loading/enable', { message: this.$t('preparingTransactionData') })
+        await this.signApprove({ amount: this.amountToLock })
+      } finally {
+        this.$store.dispatch('loading/disable')
+      }
     },
     async onLock() {
-      this.$store.dispatch('loading/enable', { message: this.$t('preparingTransactionData') })
-      if (this.signature.v) {
-        await this.lock()
-      } else {
-        await this.lockWithApproval({ amount: this.amountToLock })
+      let success = false
+
+      try {
+        this.$store.dispatch('loading/enable', { message: this.$t('preparingTransactionData') })
+        success = this.signature.v
+          ? await this.lock()
+          : await this.lockWithApproval({ amount: this.amountToLock })
+      } finally {
+        this.$store.dispatch('loading/disable')
       }
-      this.$store.dispatch('loading/disable')
-      this.close()
+
+      if (success) {
+        this.close()
+      }
     },
     setMaxAmountToLock() {
       this.computedAmountToLock = this.maxAmountToLock
-    },
-    validateLock(value) {
-      this.amountToLock = this.validateAmount(value, this.maxAmountToLock)
     },
     validateAmount(value, maxAmount) {
       this.hasErrorAmount = false

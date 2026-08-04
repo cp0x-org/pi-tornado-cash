@@ -6,6 +6,7 @@ import { SnackbarProgrammatic as Snackbar, DialogProgrammatic as Dialog } from '
 import networkConfig from '../networkConfig'
 import { PROVIDERS } from '@/constants'
 import { walletConnectConnector } from '@/services'
+import { isWalletRejection } from '@/utils'
 
 import SanctionsListAbi from '@/abis/SanctionsList.abi'
 
@@ -156,6 +157,7 @@ const actions = {
     try {
       const { ethAccount, netId } = state
       const gasParams = rootGetters['gasPrices/getGasParams']
+      const txGasParams = eipDisable ? { gasPrice: gasParams.gasPrice || gasParams.maxFeePerGas } : gasParams
 
       const callParams = {
         method,
@@ -164,7 +166,7 @@ const actions = {
             value: '0x00',
             from: ethAccount,
             ...params,
-            ...gasParams
+            ...txGasParams
           }
         ]
       }
@@ -201,7 +203,7 @@ const actions = {
 
       return txHash
     } catch (err) {
-      if (err.message.includes('EIP-1559')) {
+      if ((err.message || '').includes('EIP-1559') && !eipDisable) {
         return await dispatch('sendTransaction', {
           method,
           params,
@@ -210,9 +212,11 @@ const actions = {
           isSaving,
           eipDisable: true
         })
-      } else {
+      } else if (isWalletRejection(err)) {
         throw new Error(this.app.i18n.t('rejectedRequest', { description: state.walletName }))
       }
+
+      throw err
     } finally {
       dispatch('loading/disable', {}, { root: true })
     }

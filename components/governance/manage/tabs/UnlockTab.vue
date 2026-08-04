@@ -57,7 +57,6 @@ import { fromWei } from 'web3-utils'
 import { BigNumber as BN } from 'bignumber.js'
 import { mapActions, mapState, mapGetters } from 'vuex'
 
-import { debounce } from '@/utils'
 import NumberFormat from '@/components/NumberFormat'
 
 export default {
@@ -69,12 +68,20 @@ export default {
     return {
       amountToUnlock: '',
       minAmount: '0',
-      hasErrorAmount: false
+      hasErrorAmount: false,
+      now: Date.now(),
+      clockTimer: null
     }
   },
   computed: {
     ...mapState('torn', ['signature', 'balance', 'allowance']),
-    ...mapState('governance/gov', ['lockedBalance', 'timestamp', 'currentDelegate']),
+    ...mapState('governance/gov', [
+      'lockedBalance',
+      'timestamp',
+      'blockTimestamp',
+      'blockTimestampFetchedAt',
+      'currentDelegate'
+    ]),
     ...mapGetters('token', ['toDecimals']),
     ...mapGetters('txHashKeeper', ['addressExplorerUrl']),
     unlockMsgErr() {
@@ -92,36 +99,57 @@ export default {
     hasLockedBalance() {
       return !new BN(this.lockedBalance).isZero()
     },
+    isValidAmount() {
+      const amount = new BN(this.amountToUnlock)
+      return !amount.isNaN() && amount.gt(0) && amount.lte(this.maxAmountToUnlock)
+    },
     disableUnlock() {
-      return !Number(this.amountToUnlock) || !this.hasLockedBalance || !this.canWithdraw
+      return !this.isValidAmount || !this.hasLockedBalance || !this.canWithdraw
     },
     canWithdraw() {
-      return Date.now() > Number(this.timestamp) * 1000
+      if (!this.blockTimestamp || !this.blockTimestampFetchedAt) {
+        return false
+      }
+
+      const elapsed = Math.max(0, Math.floor((this.now - this.blockTimestampFetchedAt) / 1000))
+      return Number(this.blockTimestamp) + elapsed > Number(this.timestamp)
     },
     computedAmountToUnlock: {
       get() {
         return this.amountToUnlock
       },
       set(value) {
-        this.amountToUnlock = this.formatNumber(value)
-
-        debounce(this.validateUnlock, this.amountToUnlock)
+        const amount = this.formatNumber(value)
+        this.amountToUnlock = this.validateAmount(amount, this.maxAmountToUnlock)
       }
     }
+  },
+  mounted() {
+    this.clockTimer = setInterval(() => {
+      this.now = Date.now()
+    }, 1000)
+  },
+  beforeDestroy() {
+    clearInterval(this.clockTimer)
   },
   methods: {
     ...mapActions('governance/gov', ['unlock']),
     async onUnlock() {
-      this.$store.dispatch('loading/enable', { message: this.$t('preparingTransactionData') })
-      await this.unlock({ amount: this.amountToUnlock })
-      this.$store.dispatch('loading/disable')
-      this.close()
+      let success = false
+
+      try {
+        this.$store.dispatch('loading/enable', { message: this.$t('preparingTransactionData') })
+        success = await this.unlock({ amount: this.amountToUnlock })
+      } finally {
+        this.$store.dispatch('loading/disable')
+      }
+
+      if (success) {
+        this.close()
+      }
     },
     setMaxAmountToUnlock() {
       this.computedAmountToUnlock = this.maxAmountToUnlock
-    },
-    validateUnlock(value) {
-      this.amountToUnlock = this.validateAmount(value, this.maxAmountToUnlock)
     },
     validateAmount(value, maxAmount) {
       this.hasErrorAmount = false

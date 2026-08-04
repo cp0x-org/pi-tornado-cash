@@ -42,5 +42,47 @@ export const parseSemanticVersion = (version) => {
 }
 
 export const isWalletRejection = (err) => {
-  return /cance(l)+ed|denied|rejected/im.test(err.message)
+  return /cance(l)+ed|denied|rejected/im.test(err?.message || '')
+}
+
+const parseJsonRpcMessage = (message) => {
+  const jsonStart = message.indexOf('{')
+
+  if (jsonStart === -1) {
+    return message
+  }
+
+  try {
+    const data = JSON.parse(message.slice(jsonStart))
+    return data?.data?.originalError?.message || data?.data?.message || data?.message || message
+  } catch {
+    return message
+  }
+}
+
+export const getErrorMessage = (err, fallback = '') => {
+  const messages = [
+    err?.reason,
+    err?.data?.reason,
+    err?.data?.originalError?.message,
+    err?.data?.message,
+    err?.error?.message,
+    err?.message
+  ]
+
+  let message = messages.find((value) => typeof value === 'string' && value.trim()) || fallback
+
+  if (!message) {
+    return fallback
+  }
+
+  message = parseJsonRpcMessage(message)
+    .replace(/^Returned error:\s*/i, '')
+    .replace(/^Internal JSON-RPC error\.\s*/i, '')
+    .replace(/^VM Exception while processing transaction:\s*/i, '')
+    .replace(/^execution reverted:\s*/i, '')
+    .replace(/^revert(?:ed)?\s*/i, '')
+    .trim()
+
+  return message.slice(0, 300) || fallback
 }

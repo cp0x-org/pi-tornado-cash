@@ -7,6 +7,9 @@
       {{ $t('stakingReward.label.input') }}:
       <span><number-format :value="reward" /> TORN</span>
     </div>
+    <b-message v-if="hasRewardShortfall" type="is-warning">
+      {{ $t('stakingReward.insufficientContractBalance') }}
+    </b-message>
     <b-button :disabled="notAvailableClaim" type="is-primary is-fullwidth" outlined @click="onClaim">
       {{ $t('stakingReward.action') }}
     </b-button>
@@ -25,18 +28,26 @@ export default {
   },
   inject: ['close'],
   computed: {
-    ...mapGetters('governance/staking', ['reward']),
+    ...mapGetters('governance/staking', ['reward', 'isRewardClaimable', 'hasRewardShortfall']),
     notAvailableClaim() {
-      return BN(this.reward).isZero()
+      return !this.isRewardClaimable || BN(this.reward).isZero()
     }
   },
   methods: {
     ...mapActions('governance/staking', ['claimReward']),
     async onClaim() {
-      this.$store.dispatch('loading/enable', { message: this.$t('preparingTransactionData') })
-      await this.claimReward()
-      this.$store.dispatch('loading/disable')
-      this.close()
+      let success = false
+
+      try {
+        this.$store.dispatch('loading/enable', { message: this.$t('preparingTransactionData') })
+        success = await this.claimReward()
+      } finally {
+        this.$store.dispatch('loading/disable')
+      }
+
+      if (success) {
+        this.close()
+      }
     }
   }
 }
