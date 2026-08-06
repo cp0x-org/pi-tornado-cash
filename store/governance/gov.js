@@ -3,20 +3,34 @@
 
 import Web3 from 'web3'
 import { utils } from 'ethers'
-import { ToastProgrammatic as Toast } from 'buefy'
 
 import networkConfig from '../../networkConfig'
 
 import GovernanceABI from '@/abis/Governance.abi.json'
 import AggregatorABI from '@/abis/Aggregator.abi.json'
 import { getGovernanceEventsFromCache } from '@/services/governanceCache'
+import { getErrorMessage } from '@/utils'
 
 const { numberToHex, toWei, fromWei, toBN, hexToNumber, hexToNumberString } = require('web3-utils')
-const DEFAULT_LOG_BLOCK_RANGE = 500
+const DEFAULT_LOG_BLOCK_RANGE = 10000
 const MIN_LOG_BLOCK_RANGE = 25
 const TRANSIENT_RETRIES = 2
 
 const sleep = (ms) => new Promise((resolve) => setTimeout(resolve, ms))
+
+const showGovernanceError = (dispatch, err, fallback) => {
+  return dispatch(
+    'notice/addNoticeWithInterval',
+    {
+      notice: {
+        untranslatedTitle: getErrorMessage(err, fallback),
+        type: 'danger'
+      },
+      interval: 5000
+    },
+    { root: true }
+  )
+}
 
 const isBlockRangeTooLargeError = (err) => {
   if (err?.code === -32062 || err?.data?.code === -32062) return true
@@ -149,6 +163,8 @@ const state = () => {
     isFetchingLockedBalance: false,
     currentDelegate: '0x0000000000000000000000000000000000000000',
     timestamp: 0,
+    blockTimestamp: 0,
+    blockTimestampFetchedAt: 0,
     delegatedBalance: '0',
     isFetchingDelegatedBalance: false,
     delegators: [],
@@ -246,6 +262,10 @@ const mutations = {
   SAVE_LOCKED_TIMESTAMP(state, { timestamp }) {
     this._vm.$set(state, 'timestamp', timestamp)
   },
+  SAVE_BLOCK_TIMESTAMP(state, { timestamp }) {
+    this._vm.$set(state, 'blockTimestamp', timestamp)
+    this._vm.$set(state, 'blockTimestampFetchedAt', Date.now())
+  },
   SAVE_LATEST_PROPOSAL_ID(state, { id, status }) {
     this._vm.$set(state, 'latestProposalId', { value: id, status })
   },
@@ -328,6 +348,7 @@ const actions = {
           storeType: 'govTxs',
           onSuccess: () => {
             dispatch('torn/fetchTokenBalance', {}, { root: true })
+            dispatch('fetchUserData')
           }
         },
         isSaving: false
@@ -351,17 +372,7 @@ const actions = {
       this.$router.push('/governance')
     } catch (e) {
       console.error('createProposal', e.message)
-      dispatch(
-        'notice/addNoticeWithInterval',
-        {
-          notice: {
-            title: 'internalError',
-            type: 'danger'
-          },
-          interval: 3000
-        },
-        { root: true }
-      )
+      showGovernanceError(dispatch, e, this.app.i18n.t('internalError'))
     }
   },
   async lock({ getters, rootGetters, commit, rootState, dispatch }) {
@@ -388,7 +399,7 @@ const actions = {
           successTitle: 'lockedNotice',
           storeType: 'govTxs',
           onSuccess: () => {
-            dispatch('fetchBalances')
+            dispatch('fetchUserData')
             dispatch('torn/fetchTokenBalance', {}, { root: true })
             commit('torn/REMOVE_SIGNATURE', {}, { root: true })
           }
@@ -408,19 +419,11 @@ const actions = {
         },
         { root: true }
       )
+      return true
     } catch (e) {
       console.error('lock', e.message)
-      dispatch(
-        'notice/addNoticeWithInterval',
-        {
-          notice: {
-            title: 'internalError',
-            type: 'danger'
-          },
-          interval: 3000
-        },
-        { root: true }
-      )
+      showGovernanceError(dispatch, e, this.app.i18n.t('internalError'))
+      return false
     }
   },
   async lockWithApproval({ getters, rootGetters, commit, rootState, dispatch }, { amount }) {
@@ -446,7 +449,7 @@ const actions = {
           successTitle: 'lockedNotice',
           storeType: 'govTxs',
           onSuccess: () => {
-            dispatch('fetchBalances')
+            dispatch('fetchUserData')
             dispatch('torn/fetchTokenBalance', {}, { root: true })
             dispatch('torn/fetchTokenAllowance', {}, { root: true })
           }
@@ -466,13 +469,11 @@ const actions = {
         },
         { root: true }
       )
+      return true
     } catch (e) {
       console.error('lockWithApproval', e.message)
-      Toast.open({
-        message: this.app.i18n.t('internalError'),
-        type: 'is-danger',
-        duration: 3000
-      })
+      showGovernanceError(dispatch, e, this.app.i18n.t('internalError'))
+      return false
     }
   },
   async castVote(context, payload) {
@@ -521,6 +522,7 @@ const actions = {
           storeType: 'govTxs',
           onSuccess: () => {
             dispatch('fetchProposals', { requestId: id })
+            dispatch('fetchUserData')
           }
         },
         isAwait: false
@@ -540,17 +542,7 @@ const actions = {
       )
     } catch (e) {
       console.error('castVote', e.message)
-      dispatch(
-        'notice/addNoticeWithInterval',
-        {
-          notice: {
-            title: 'internalError',
-            type: 'danger'
-          },
-          interval: 3000
-        },
-        { root: true }
-      )
+      showGovernanceError(dispatch, e, this.app.i18n.t('internalError'))
     } finally {
       dispatch('loading/disable', {}, { root: true })
       commit('SAVE_CASTING_VOTE', false)
@@ -596,17 +588,7 @@ const actions = {
       )
     } catch (e) {
       console.error('executeProposal', e.message)
-      dispatch(
-        'notice/addNoticeWithInterval',
-        {
-          notice: {
-            title: 'internalError',
-            type: 'danger'
-          },
-          interval: 3000
-        },
-        { root: true }
-      )
+      showGovernanceError(dispatch, e, this.app.i18n.t('internalError'))
     }
   },
   async unlock({ getters, rootGetters, commit, rootState, dispatch }, { amount }) {
@@ -614,7 +596,27 @@ const actions = {
       const { ethAccount } = rootState.metamask
       const netId = rootGetters['metamask/netId']
       const govInstance = getters.govContract({ netId })
+      const web3 = getters.getWeb3({ netId })
       amount = toWei(amount.toString())
+
+      const [timestamp, lockedBalance, latestBlock] = await Promise.all([
+        govInstance.methods.canWithdrawAfter(ethAccount).call(),
+        govInstance.methods.lockedBalance(ethAccount).call(),
+        web3.eth.getBlock('latest')
+      ])
+
+      commit('SAVE_LOCKED_TIMESTAMP', { timestamp: Number(timestamp) })
+      commit('SAVE_BLOCK_TIMESTAMP', { timestamp: Number(latestBlock.timestamp) })
+      commit('SAVE_LOCKED_BALANCE', { balance: lockedBalance })
+
+      if (Number(latestBlock.timestamp) <= Number(timestamp)) {
+        throw new Error(this.app.i18n.t('governanceTokensLocked'))
+      }
+
+      if (toBN(amount).gt(toBN(lockedBalance))) {
+        throw new Error(this.app.i18n.t('governanceInsufficientBalance'))
+      }
+
       const gas = await govInstance.methods.unlock(amount).estimateGas({ from: ethAccount, value: 0 })
       const data = await govInstance.methods.unlock(amount).encodeABI()
 
@@ -630,7 +632,7 @@ const actions = {
           successTitle: 'unlocked',
           storeType: 'govTxs',
           onSuccess: () => {
-            dispatch('fetchBalances')
+            dispatch('fetchUserData')
             dispatch('torn/fetchTokenBalance', {}, { root: true })
             commit('torn/REMOVE_SIGNATURE', {}, { root: true })
           }
@@ -650,19 +652,11 @@ const actions = {
         },
         { root: true }
       )
+      return true
     } catch (e) {
       console.error('unlock', e.message)
-      dispatch(
-        'notice/addNoticeWithInterval',
-        {
-          notice: {
-            title: 'internalError',
-            type: 'danger'
-          },
-          interval: 3000
-        },
-        { root: true }
-      )
+      showGovernanceError(dispatch, e, this.app.i18n.t('internalError'))
+      return false
     }
   },
   async delegate({ getters, rootGetters, commit, rootState, dispatch }, { delegatee }) {
@@ -706,17 +700,7 @@ const actions = {
       )
     } catch (e) {
       console.error('delegate', e.message)
-      dispatch(
-        'notice/addNoticeWithInterval',
-        {
-          notice: {
-            title: 'internalError',
-            type: 'danger'
-          },
-          interval: 3000
-        },
-        { root: true }
-      )
+      showGovernanceError(dispatch, e, this.app.i18n.t('internalError'))
     }
   },
   async undelegate({ getters, rootGetters, commit, rootState, dispatch }) {
@@ -760,17 +744,7 @@ const actions = {
       )
     } catch (e) {
       console.error('undelegate', e.message)
-      dispatch(
-        'notice/addNoticeWithInterval',
-        {
-          notice: {
-            title: 'internalError',
-            type: 'danger'
-          },
-          interval: 3000
-        },
-        { root: true }
-      )
+      showGovernanceError(dispatch, e, this.app.i18n.t('internalError'))
     }
   },
   async fetchProposals({ rootGetters, getters, commit }, { requestId }) {
@@ -904,8 +878,13 @@ const actions = {
       const netId = rootGetters['metamask/netId']
 
       const govInstance = getters.govContract({ netId })
-      const timestamp = await govInstance.methods.canWithdrawAfter(ethAccount).call()
+      const web3 = getters.getWeb3({ netId })
+      const [timestamp, latestBlock] = await Promise.all([
+        govInstance.methods.canWithdrawAfter(ethAccount).call(),
+        web3.eth.getBlock('latest')
+      ])
       commit('SAVE_LOCKED_TIMESTAMP', { timestamp })
+      commit('SAVE_BLOCK_TIMESTAMP', { timestamp: Number(latestBlock.timestamp) })
     } catch (e) {
       console.error('fetchedLockedTimestamp', e.message)
     }
@@ -1033,22 +1012,24 @@ const actions = {
 
       const netId = rootGetters['metamask/netId']
       const govInstance = getters.govContract({ netId })
+      const web3 = getters.getWeb3({ netId })
       const aggregatorContract = getters.aggregatorContract
-      const {
-        balance,
-        latestProposalId,
-        timelock,
-        delegatee,
-        ...userdata
-      } = await aggregatorContract.methods.getUserData(govInstance._address, ethAccount).call()
+      const [userData, latestBlock] = await Promise.all([
+        aggregatorContract.methods.getUserData(govInstance._address, ethAccount).call(),
+        web3.eth.getBlock('latest')
+      ])
+      const { balance, latestProposalId, timelock, delegatee, ...userdata } = userData
       commit('SAVE_DELEGATEE', { currentDelegate: delegatee })
 
       const latestProposalIdState = ProposalState[Number(userdata.latestProposalIdState)]
       commit('SAVE_LATEST_PROPOSAL_ID', { id: Number(latestProposalId), status: latestProposalIdState })
       commit('SAVE_LOCKED_TIMESTAMP', { timestamp: Number(timelock) })
+      commit('SAVE_BLOCK_TIMESTAMP', { timestamp: Number(latestBlock.timestamp) })
       commit('SAVE_LOCKED_BALANCE', { balance })
+      return true
     } catch (e) {
       console.error('fetchUserData', e.message)
+      return false
     } finally {
       commit('SAVE_FETCHING_LOCKED_BALANCE', false)
     }

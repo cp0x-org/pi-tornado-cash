@@ -3,6 +3,9 @@ import Web3 from 'web3'
 
 import networkConfig from '../networkConfig'
 
+const GOVERNANCE_VERSION_SELECTOR = '0x54fd4d50'
+const RPC_CHECK_ACCOUNT = '0x0000000000000000000000000000000000000001'
+
 const getFirstRpcs = (acc, [netId, { rpcUrls }]) => {
   const [rpc] = Object.values(rpcUrls)
 
@@ -78,14 +81,24 @@ export const actions = {
     try {
       const web3 = new Web3(url)
 
-      const chainId = await web3.eth.getChainId()
+      const [chainId] = await Promise.all([web3.eth.getChainId(), web3.eth.getBlockNumber()])
 
       const isCurrent = Number(chainId) === Number(netId)
-      if (isCurrent) {
-        return { isValid: true }
-      } else {
+      if (!isCurrent) {
         return { isValid: false, error: this.app.i18n.t('thisRpcIsForDifferentNetwork') }
       }
+
+      const governanceAddress = networkConfig[`netId${netId}`]['governance.contract.tornadocash.eth']
+
+      if (governanceAddress) {
+        await web3.eth.estimateGas({
+          from: RPC_CHECK_ACCOUNT,
+          to: governanceAddress,
+          data: GOVERNANCE_VERSION_SELECTOR
+        })
+      }
+
+      return { isValid: true }
     } catch (e) {
       console.error('checkRpc', e)
       return { isValid: false, error: this.app.i18n.t('rpcIsDown') }

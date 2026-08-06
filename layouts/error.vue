@@ -1,6 +1,6 @@
 <template>
   <div>
-<!--    <SiteAnnouncement />-->
+    <!-- <SiteAnnouncement /> -->
     <div class="has-text-centered">
       <ErrorIcon :is404="statusCode === 404" />
       <h1 class="title is-1">{{ $t('errorPage.title') }}</h1>
@@ -30,13 +30,11 @@ import { mapActions } from 'vuex'
 
 import { sleep } from '@/utils'
 import { ErrorIcon } from '@/components/icons'
-import SiteAnnouncement from '@/components/SiteAnnouncement'
 
 export default {
   name: 'ErrorPage',
   components: {
-    ErrorIcon,
-    SiteAnnouncement
+    ErrorIcon
   },
   props: {
     error: {

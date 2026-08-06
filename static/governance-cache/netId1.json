@@ -3,13 +3,13 @@
   "netId": 1,
   "governanceAddress": "0x5efda50f22d34F262c29268506C5Fa42cB56A1Ce",
   "fromBlock": 11474695,
-  "lastBlock": 24880857,
-  "updatedAt": "2026-04-14T21:55:01.280Z",
+  "lastBlock": 25511578,
+  "updatedAt": "2026-07-11T19:51:15.894Z",
   "sync": {
-    "ProposalCreated": 24880857,
-    "Delegated": 24880857,
-    "Undelegated": 24880857,
-    "Voted": 24880857
+    "ProposalCreated": 25511578,
+    "Delegated": 25511578,
+    "Undelegated": 25511578,
+    "Voted": 25511578
   },
   "events": {
     "ProposalCreated": [
@@ -856,6 +856,32 @@
           "startTime": "1770464810",
           "endTime": "1770896810",
           "description": "{\"title\":\"Proposal #65: Update ETH RPC List and ENS\",\"description\":\"Reason: The current ETH RPC List on the UI no longer support historical queries, necessitating an update to the default ETH RPC list.\\n\\nUI Update Details:\\n\\nETH RPCs:  blockscoutRPC,blastRPC,xrpc, gasHawkRPC, lavaRPC,torndaoRPC,sentioRPC,tornadoRPC\\n\\nTarget: Update the IPFS hash for the Tornado Cash classic UI associated with the ENS domain tornadocash.eth.\\n        \\nUI Code Repository: https://codeberg.org/torndao/classic-ui/commits/branch/development\\n        \\nUI Code commit: https://codeberg.org/torndao/classic-ui/commit/d52c01688f5697e60a1d3c598a4c30989403fb0f\\n        \\nIPFS Hash: bafybeie5hxovqc4ifcnrnhvmjbefxgeix6oqvzaspyytdxiyscji22v5pu (accessible via https://ipfs.io/ipfs/bafybeie5hxovqc4ifcnrnhvmjbefxgeix6oqvzaspyytdxiyscji22v5pu)\\n        \\nIPFS Hash Verification Tool: https://codeberg.org/torndao/tornado-ipfs-ui\\n        \\nContent Hash: e301017012209d3ddd580b88289b169eac48485b9888bf9d0ae4127e3131dd1890928d6abd7d (calculated using the tool at https://codeberg.org/torndao/tornado-ipfs-ui/src/branch/main/ContentHash.html)\\n       \\nAffected DomainsThe updated IPFS hash will affect the following domains:\\ntornadocash.eth.limo\\ntornadocash.eth.link\\nipfs.io/ipns/tornadocash.eth\\ntornadocash-eth.ipns.dweb.link\"}"
+        }
+      },
+      {
+        "blockNumber": 24955293,
+        "logIndex": 117,
+        "transactionHash": "0x1ea572d924fbccd016785765f16b8bb30b0d3c6b2b5b79ee8c9345bbd90cdf3d",
+        "returnValues": {
+          "id": "66",
+          "proposer": "0x914d73E3F96948c768443016F3710D0D78dFb20E",
+          "target": "0x208fC9F4d527B89e4F42d9fED7A00ce70D46770B",
+          "startTime": "1777099538",
+          "endTime": "1777531538",
+          "description": "{\"title\":\"Proposal #66: Update the ETH RPC List and ENS - 50 TORN\",\"description\":\"Expenditure: 50 TORN\\n\\nReason: The current default Blockscout RPC is unusable because it enforces a strict JSON-RPC mode.\\n\\nThe feeOracleV4 and feeOracleV5 calls in tornado-oracles do not include the latest block parameters, causing compatibility issues with strictly compatible RPC endpoints.\\n\\nThe most practical and straightforward solution is to update the ETH RPC list to resolve this incompatibility issue.\\n\\nUI Update Details:\\n\\nETH RPCs: pocket, Mevblocker, mevblockerFullprivacy, torndaoRPC, sentioRPC, lavaRPC, blastRPC, xrpc\\n\\nGoal: Update the IPFS hash of the Tornado Cash Classic UI associated with the ENS domain tornadocash.eth.\\n\\nUI Codebase: https://codeberg.org/torndao/classic-ui/commits/branch/development\\n\\nUI Code Commit: https://codeberg.org/torndao/classic-ui/commit/d52c01688f5697e60a1d3c598a4c30989403fb0f\\n\\nIPFS Hash: bafybeibr7xeb2sg6uiaeueh5lrw6vsoopkyti67wamiyimpo5gvrpua5by (Accessible via https://ipfs.io/ipfs/bafybeibr7xeb2sg6uiaeueh5lrw6vsoopkyti67wamiyimpo5gvrpua5by)\\n\\nIPFS Hash Verification Tool: https://codeberg.org/torndao/tornado-ipfs-ui\\n\\nContent Hash: e3010170122031fdc81d48dea2004a10fd5c6deac9ce7ab1347bf603118431eee9ab17d01d0e (Calculated using tools at https://codeberg.org/torndao/tornado-ipfs-ui/src/branch/main/ContentHash.html)\\n\\nAffected Domains: The updated IPFS hash will affect the following domains:\\n\\ntornadocash.eth.limo\\n\\ntornadocash.eth.link\\n\\nipfs.io/ipns/tornadocash.eth\\n\\ntornadocash-eth.ipns.dweb.link\"}"
+        }
+      },
+      {
+        "blockNumber": 25392193,
+        "logIndex": 58,
+        "transactionHash": "0x350da85a4ca2541f75cc9c1a42371de2660562b79b347018d30f2cfc58e42d40",
+        "returnValues": {
+          "id": "67",
+          "proposer": "0xD4eCA8c9242b9F9faa3CF19a78defC21dC97A925",
+          "target": "0x0D0BE561052d4cf419575E35dE4e60163a55185B",
+          "startTime": "1782361094",
+          "endTime": "1782793094",
+          "description": "{\"title\":\"Tornado Cash Governance Proposal: Establishing 0.5% Fee Standard and 90% Dynamic Deflationary Burn Plan\",\"description\":\"Summary\\nThis proposal aims to transition the Relayer Registry to the V5 Strategy A architecture, officially abolishing the legacy fee structures to establish a brand-new dynamic deflationary economic model.\\n\\nThe core parameters of the upgrade are: unifying and adjusting the Relayer service fee rate to 0.5%. Within the withheld tokens from this fee base, a structured reallocation mechanism is introduced—90% of the tokens will be direct-routed to the burn pool for permanent destruction (Burn), while the remaining 10% will continue to be distributed as staking rewards to governance stakers (achieving a 90/10 wealth redistribution under the 0.5% fee standard). Concurrently, this proposal requests 50 TORN from the treasury to reimburse the proposer’s upfront gas expenses paid during mainnet contract deployment.\\n\\nWithout introducing any risk to existing staked assets, this upgrade reshapes TORN’s deflationary tokenomics, enhances market scarcity, and fosters a long-term positive feedback loop for all ecosystem participants (stakers, relayers, and token holders).\\n\\n🔍 Core Arguments\\n1️⃣ Zero-Loss & Win-Win: Revamping Fee Rules to 0.5% and Spurring Token Price Appreciation via the Precise \\\"90/10\\\" Deflationary Model\\nNewly Established 0.5% Fee Standard: This upgrade completely re-engineers the relayer ecosystem by standardizing the service fee to exactly 0.5%. This parameter regulates market order while securing sustainable, predictable volume streams for both the treasury and the burn pool.\\n\\nPrecise Deflationary Vector (90% Burn)：By permanently destroying 90% of the accumulated fees, a high-intensity, rigid on-chain deflationary narrative is embedded into TORN. The continuous contraction of circulating market supply directly drives the fundamental valuation of the remaining asset base.\\n\\nPreserving 10% Staking Incentive: We have meticulously retained a 10% allocation of the collected fees as staking incentives. Powered by the multiplier effect of token price appreciation, the \"}"
         }
       }
     ],
@@ -14666,6 +14692,347 @@
           "voter": "0x7b5edF38D955dd9deC103aF05c2D68B28e02Ad90",
           "support": true,
           "votes": "86764746419611672355862"
+        }
+      },
+      {
+        "blockNumber": 24955320,
+        "logIndex": 681,
+        "transactionHash": "0xbec5d0e743e1108c62583f53a5074b180689cd161df7a98cc8e8e7b2f059e069",
+        "returnValues": {
+          "proposalId": "66",
+          "voter": "0x0564242234D46425eCaEB0a403654A3e9EA86A6A",
+          "support": true,
+          "votes": "120000144104265036477768"
+        }
+      },
+      {
+        "blockNumber": 24956194,
+        "logIndex": 1555,
+        "transactionHash": "0x76f21b5465692f7d1a354d9c50402ca009a75263cea5eba7bcbb9b4852b81ab9",
+        "returnValues": {
+          "proposalId": "66",
+          "voter": "0x018a883667900a1d132A573b178F60b61f4f57B1",
+          "support": true,
+          "votes": "810161987031058014065"
+        }
+      },
+      {
+        "blockNumber": 24956237,
+        "logIndex": 1874,
+        "transactionHash": "0x2f747cef599d0793096d1bb205b01c1cbca543b8be070924358f1463465dca34",
+        "returnValues": {
+          "proposalId": "66",
+          "voter": "0x018a883667900a1d132A573b178F60b61f4f57B1",
+          "support": true,
+          "votes": "810161987031058014065"
+        }
+      },
+      {
+        "blockNumber": 24968915,
+        "logIndex": 398,
+        "transactionHash": "0x353ca943d6710c0c0e05596397b61b187fe85b494c3a92411fb8bbafc18bc6d1",
+        "returnValues": {
+          "proposalId": "66",
+          "voter": "0x6f9BB7e454f5B3eb2310343f0E99269dC2BB8A1d",
+          "support": true,
+          "votes": "1127382562511004584015"
+        }
+      },
+      {
+        "blockNumber": 24972684,
+        "logIndex": 563,
+        "transactionHash": "0x10654ed925aff689ff4e2bd7353348ac8469bc57e86a563328c51976a041edf7",
+        "returnValues": {
+          "proposalId": "66",
+          "voter": "0x3A6e0DF93d9377f6224C68bFA6053230389E2f92",
+          "support": true,
+          "votes": "191147010056847637984"
+        }
+      },
+      {
+        "blockNumber": 25394332,
+        "logIndex": 228,
+        "transactionHash": "0x98a3b56cafea6b92971bc83b3596d4aa41ef05d5fdf502a3d4184f38d3459f14",
+        "returnValues": {
+          "proposalId": "67",
+          "voter": "0x5d36fDbc5392FFc4697329aaa36a50CDd8838750",
+          "support": false,
+          "votes": "27163028482742014934425"
+        }
+      },
+      {
+        "blockNumber": 25395015,
+        "logIndex": 987,
+        "transactionHash": "0xb2d13d931a6baa5e58cd8acfad0814565a58a241edc79149214b8da712e265ec",
+        "returnValues": {
+          "proposalId": "67",
+          "voter": "0x85DaEB41c0819981DAE1b6e829A39247EF3E4C66",
+          "support": false,
+          "votes": "54578000000000000000000"
+        }
+      },
+      {
+        "blockNumber": 25395350,
+        "logIndex": 715,
+        "transactionHash": "0x0901ac4eca2a32dccfebd8f4f63c3fd6bb03c508a7370ebca4abd3b846ceb03d",
+        "returnValues": {
+          "proposalId": "67",
+          "voter": "0xa388e8eA2e71BB62f3A18eBdF7c031a8395f9C0D",
+          "support": false,
+          "votes": "19296000000000000000000"
+        }
+      },
+      {
+        "blockNumber": 25395402,
+        "logIndex": 259,
+        "transactionHash": "0x56d4af05295547e7f5c6774be3610a263eeeda1343a1dcfdfd19c77916163de5",
+        "returnValues": {
+          "proposalId": "67",
+          "voter": "0x50042C58F7F55d62EC5275F67Ac4F847e4c93FBb",
+          "support": false,
+          "votes": "17224759212285604936376"
+        }
+      },
+      {
+        "blockNumber": 25395590,
+        "logIndex": 409,
+        "transactionHash": "0x088b36f239c5606ebf1a1c9c6b544faff0c61b9040591eb53d61169083e84e6d",
+        "returnValues": {
+          "proposalId": "67",
+          "voter": "0xc62664bb39Ab6327580d22466Cc38Df7A65D1D17",
+          "support": false,
+          "votes": "5853496785331847157945"
+        }
+      },
+      {
+        "blockNumber": 25395629,
+        "logIndex": 976,
+        "transactionHash": "0xcb0d230ccb1f43169ad1c9e4117cb83a0ef015477544cd71b260d116a7915fa1",
+        "returnValues": {
+          "proposalId": "67",
+          "voter": "0xbcC324d812c940E8188ac9f38A0526235B6b75C6",
+          "support": false,
+          "votes": "10381529815179339627436"
+        }
+      },
+      {
+        "blockNumber": 25395629,
+        "logIndex": 977,
+        "transactionHash": "0xcb0d230ccb1f43169ad1c9e4117cb83a0ef015477544cd71b260d116a7915fa1",
+        "returnValues": {
+          "proposalId": "67",
+          "voter": "0x82797B9f2d2bf04A276eE6fD253C5f52c0891721",
+          "support": false,
+          "votes": "19000000000000000000000"
+        }
+      },
+      {
+        "blockNumber": 25396160,
+        "logIndex": 711,
+        "transactionHash": "0x7d9ed507d87c700fe983c4e1371c2ebff854d7d6f47acc24cdd40e8435a4287e",
+        "returnValues": {
+          "proposalId": "67",
+          "voter": "0xd0860A4a04CDda09ec28c34E12f936D1D6492810",
+          "support": false,
+          "votes": "10385326416917362692064"
+        }
+      },
+      {
+        "blockNumber": 25396652,
+        "logIndex": 128,
+        "transactionHash": "0x05d28f2d481b4d9e0ca1dd5926844309300f71964fb04250d534f597f4e03a9a",
+        "returnValues": {
+          "proposalId": "67",
+          "voter": "0xEd935484648764d4DeBca506D61A03892C28D157",
+          "support": false,
+          "votes": "22086000000000000000000"
+        }
+      },
+      {
+        "blockNumber": 25396847,
+        "logIndex": 436,
+        "transactionHash": "0x52d61c16610d4e1ad8903f050ebce9210b2b0d281b36723ae2e218804f3d5df7",
+        "returnValues": {
+          "proposalId": "67",
+          "voter": "0x6f9BB7e454f5B3eb2310343f0E99269dC2BB8A1d",
+          "support": true,
+          "votes": "1127382562511004584015"
+        }
+      },
+      {
+        "blockNumber": 25397378,
+        "logIndex": 536,
+        "transactionHash": "0xc3cd897143b0b5d053b64e7435308ceee92ab82238e16e6b3ed0f7b6214bc5f4",
+        "returnValues": {
+          "proposalId": "67",
+          "voter": "0xF1b842E8C33F6273476A752BF30273Bf191D161f",
+          "support": false,
+          "votes": "53627079449270201243346"
+        }
+      },
+      {
+        "blockNumber": 25398074,
+        "logIndex": 252,
+        "transactionHash": "0xac74ee1b7bdcca0cc263466198be22c8b47c5a1121ee1ca33f367361b99c82c0",
+        "returnValues": {
+          "proposalId": "67",
+          "voter": "0xb2891a5E037EC5e243A65b09616B7333af4AE03e",
+          "support": false,
+          "votes": "3780565093743933091327"
+        }
+      },
+      {
+        "blockNumber": 25398412,
+        "logIndex": 269,
+        "transactionHash": "0x33b75ac1f2895db586cb44158050063d1d556d311e92eb242dec7dbeb293c884",
+        "returnValues": {
+          "proposalId": "67",
+          "voter": "0xAdE9e51C9E23d64E538A7A38656B78aB6Bcc349e",
+          "support": false,
+          "votes": "10000"
+        }
+      },
+      {
+        "blockNumber": 25398566,
+        "logIndex": 91,
+        "transactionHash": "0xaada02b41e0d063ea7ae32981c8f01737de09a5d93cbd8af2dce5cc9cfe730f3",
+        "returnValues": {
+          "proposalId": "67",
+          "voter": "0x7b5edF38D955dd9deC103aF05c2D68B28e02Ad90",
+          "support": false,
+          "votes": "91338566598200876167850"
+        }
+      },
+      {
+        "blockNumber": 25399043,
+        "logIndex": 230,
+        "transactionHash": "0x037386777c447a7df54bcf33209016fd2047655887c7123f3c9a9bfef3b2afec",
+        "returnValues": {
+          "proposalId": "67",
+          "voter": "0x26532eC1bb6b115a8Ae697be63D47122De02fCa7",
+          "support": false,
+          "votes": "53719197191973377469477"
+        }
+      },
+      {
+        "blockNumber": 25399291,
+        "logIndex": 306,
+        "transactionHash": "0x2a43ccc8b0a168705848a4fd3b95d3debba699bd665152178574c5574d943085",
+        "returnValues": {
+          "proposalId": "67",
+          "voter": "0xE5bbc8C362EB53C6f7264C94d969B5a7962A11DF",
+          "support": false,
+          "votes": "35000000000000000287776"
+        }
+      },
+      {
+        "blockNumber": 25399944,
+        "logIndex": 498,
+        "transactionHash": "0x331b4bea6517e8b334e4c2bbe137b9d868c5786699ca42b88f104664eaad7a6a",
+        "returnValues": {
+          "proposalId": "67",
+          "voter": "0x6FB381AecDc80c2BBC5a7D4E6A0d0eE262fa87D4",
+          "support": false,
+          "votes": "6923271488762308863230"
+        }
+      },
+      {
+        "blockNumber": 25400278,
+        "logIndex": 243,
+        "transactionHash": "0x2f960234ffb5e1f16958fdcea2e290765d1e6e7db8883b9897add42cb175d01e",
+        "returnValues": {
+          "proposalId": "67",
+          "voter": "0x7B2e487bAd98FbdA96E6675bf273C9DA61AdE94D",
+          "support": false,
+          "votes": "1811919724125363988607"
+        }
+      },
+      {
+        "blockNumber": 25400294,
+        "logIndex": 1033,
+        "transactionHash": "0xd23df250e555f7d0472219042093113146baa7c03dd3bf14a17f482412e72b4f",
+        "returnValues": {
+          "proposalId": "67",
+          "voter": "0x4A358558C8A7ece1F41BC848D3F7E999F3A00A6e",
+          "support": false,
+          "votes": "1602303108119833961394"
+        }
+      },
+      {
+        "blockNumber": 25402199,
+        "logIndex": 22,
+        "transactionHash": "0x496095f7ef118429d29248b93b5522660758db6c56818edfbc90d72beafb8a4f",
+        "returnValues": {
+          "proposalId": "67",
+          "voter": "0x75B9941DF432522EcfCa84d603B6CFD6a278B8b8",
+          "support": false,
+          "votes": "6416176018741019556796"
+        }
+      },
+      {
+        "blockNumber": 25407861,
+        "logIndex": 393,
+        "transactionHash": "0xccc6e433cb4a7fcc840f99145d25932c96a100f319e56bd9d4a5935171f4f357",
+        "returnValues": {
+          "proposalId": "67",
+          "voter": "0x2BcE45670cba81658E45C132f0B4EaBa97a7FBBa",
+          "support": false,
+          "votes": "7379003523143205741701"
+        }
+      },
+      {
+        "blockNumber": 25413253,
+        "logIndex": 162,
+        "transactionHash": "0x12f5bbbbfbd12243e690be2b1cd094b6a91d776219871dc18c1c07050c559937",
+        "returnValues": {
+          "proposalId": "67",
+          "voter": "0xeE1D1ac27A80De54F0ba92b2E25EBb3418495db2",
+          "support": false,
+          "votes": "5138817091715918427782"
+        }
+      },
+      {
+        "blockNumber": 25414106,
+        "logIndex": 444,
+        "transactionHash": "0x874b8009444ff61416318ead4902150a2de6536b676cb18fc93e35c8752dc748",
+        "returnValues": {
+          "proposalId": "67",
+          "voter": "0xdC63110Bf712e5076701297f193bE6b75B466D76",
+          "support": false,
+          "votes": "1603755566769671052369"
+        }
+      },
+      {
+        "blockNumber": 25415761,
+        "logIndex": 578,
+        "transactionHash": "0x39f0f49facdcaad7d6dc8b8f91049b91d67647441fbccd3e91c156fe05d02a8f",
+        "returnValues": {
+          "proposalId": "67",
+          "voter": "0x0564242234D46425eCaEB0a403654A3e9EA86A6A",
+          "support": false,
+          "votes": "125010144104265036477768"
+        }
+      },
+      {
+        "blockNumber": 25417923,
+        "logIndex": 476,
+        "transactionHash": "0x2a379f10798d7e771931b59de1cbefe29c6d9e539ba503ae340fe6507e3c90c8",
+        "returnValues": {
+          "proposalId": "67",
+          "voter": "0x6f9BB7e454f5B3eb2310343f0E99269dC2BB8A1d",
+          "support": false,
+          "votes": "1127382562511004584015"
+        }
+      },
+      {
+        "blockNumber": 25426433,
+        "logIndex": 118,
+        "transactionHash": "0x6a0f8fcfac21164634e55065f0e247c577402cce809f28f8a65bdd50e3cc98fb",
+        "returnValues": {
+          "proposalId": "67",
+          "voter": "0x3ecEB17D17652486593Df9F50b1D6DCD35203f12",
+          "support": false,
+          "votes": "42755276883628644735972"
         }
       }
     ]

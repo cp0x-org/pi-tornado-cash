@@ -65,7 +65,9 @@ export async function getPastEvents({ type, fromBlock, netId, events, contractAt
   const currentBlockNumber = await web3.eth.getBlockNumber()
   const blockDifference = Math.ceil(currentBlockNumber - fromBlock)
 
-  const blockRange = Number(netId) === 56 ? 4950 : blockDifference / 20
+  // Ankr rejects eth_getLogs ranges above 10000 blocks
+  const MAX_BLOCK_RANGE = 10000
+  const blockRange = Number(netId) === 56 ? 4950 : Math.min(blockDifference / 20 || 1, MAX_BLOCK_RANGE)
 
   let chunksCount = blockDifference === 0 ? 1 : Math.ceil(blockDifference / blockRange)
   const chunkSize = Math.ceil(blockDifference / chunksCount)

@@ -1,6 +1,6 @@
 <template>
   <div class="wrapper">
-<!--    <SiteAnnouncement />-->
+    <!-- <SiteAnnouncement /> -->
     <Navbar />
     <div v-show="mismatchNetwork" class="network has-background-warning">
       {{ $t('pleaseChangeNetwork', { network: netId }) }}
@@ -35,7 +35,6 @@ import Footer from '@/components/Footer'
 import Loader from '@/components/Loaders/Loader'
 import Settings from '@/components/Settings'
 import Notices from '@/components/Notices'
-import SiteAnnouncement from '@/components/SiteAnnouncement'
 import { openConfirmModal } from '@/modules/account'
 import NetworkModal from '@/components/NetworkModal'
 
@@ -45,8 +44,7 @@ export default {
     Navbar,
     Footer,
     Loader,
-    Notices,
-    SiteAnnouncement
+    Notices
   },
   data() {
     return {

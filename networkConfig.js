@@ -1,11 +1,4 @@
-const {
-  INFURA_KEY,
-  ALCHEMY_MAINNET_KEY,
-  ALCHEMY_POLYGON_KEY,
-  ALCHEMY_OPTIMISM_KEY,
-  ALCHEMY_ARBITRUM_KEY,
-  ALCHEMY_GOERLI_KEY
-} = process.env
+import rpcUrls from './rpcConfig'
 
 export default {
   netId1: {
@@ -27,16 +20,7 @@ export default {
     emptyElement: '21663839004416932945382355908790599225266501822907911457504978515578255421292',
     networkName: 'Ethereum Mainnet',
     deployedBlock: 9116966,
-    rpcUrls: {
-      Infura: {
-        name: 'Infura',
-        url: `https://mainnet.infura.io/v3/${INFURA_KEY}`
-      },
-      Alchemy: {
-        name: 'Alchemy',
-        url: `https://eth-mainnet.alchemyapi.io/v2/${ALCHEMY_MAINNET_KEY}`
-      }
-    },
+    rpcUrls: rpcUrls.netId1,
     multicall: '0xeefba1e63905ef1d7acba5a8513c70307c1ce441',
     registryContract: '0x58E8dCC13BE9780fC42E8723D8EaD4CF46943dF2',
     echoContractAccount: '0x9B27DD5Bb15d42DC224FCD0B7caEbBe16161Df42',
@@ -124,7 +108,7 @@ export default {
     'torn.contract.tornadocash.eth': '0x77777FeDdddFfC19Ff86DB637967013e6C6A116C',
     'governance.contract.tornadocash.eth': '0x5efda50f22d34F262c29268506C5Fa42cB56A1Ce',
     'tornado-router.contract.tornadocash.eth': '0xd90e2f925DA726b50C4Ed8D0Fb90Ad053324F31b',
-    'staking-rewards.contract.tornadocash.eth': '0x2FC93484614a34f26F7970CBB94615bA109BB4bf'
+    'staking-rewards.contract.tornadocash.eth': '0x5B3f656C80E8ddb9ec01Dd9018815576E9238c29'
   },
   netId56: {
     rpcCallRetryAttempt: 15,
@@ -147,20 +131,7 @@ export default {
     deployedBlock: 8158799,
     multicall: '0x41263cba59eb80dc200f3e2544eda4ed6a90e76c',
     echoContractAccount: '0xa75BF2815618872f155b7C4B0C81bF990f5245E4',
-    rpcUrls: {
-      publicRpc1: {
-        name: 'BSC Public RPC 1',
-        url: 'https://bsc-dataseed.binance.org/'
-      },
-      publicRpc2: {
-        name: 'BSC Public RPC 2',
-        url: 'https://bsc-dataseed1.defibit.io/'
-      },
-      publicRpc3: {
-        name: 'BSC Public RPC 3',
-        url: 'https://bsc-dataseed1.ninicoin.io/'
-      }
-    },
+    rpcUrls: rpcUrls.netId56,
     tokens: {
       bnb: {
         instanceAddress: {
@@ -202,16 +173,7 @@ export default {
     deployedBlock: 16257962,
     multicall: '0x11ce4B23bD875D7F5C6a31084f55fDe1e9A87507',
     echoContractAccount: '0xa75BF2815618872f155b7C4B0C81bF990f5245E4',
-    rpcUrls: {
-      Infura: {
-        name: 'Infura',
-        url: `https://polygon-mainnet.infura.io/v3/${INFURA_KEY}`
-      },
-      Alchemy: {
-        name: 'Alchemy',
-        url: `https://polygon-mainnet.g.alchemy.com/v2/${ALCHEMY_POLYGON_KEY}`
-      }
-    },
+    rpcUrls: rpcUrls.netId137,
     tokens: {
       matic: {
         instanceAddress: {
@@ -254,16 +216,7 @@ export default {
     multicall: '0x35A6Cdb2C9AD4a45112df4a04147EB07dFA01aB7',
     echoContractAccount: '0xa75BF2815618872f155b7C4B0C81bF990f5245E4',
     ovmGasPriceOracleContract: '0x420000000000000000000000000000000000000F',
-    rpcUrls: {
-      Alchemy: {
-        name: 'Alchemy',
-        url: `https://opt-mainnet.g.alchemy.com/v2/${ALCHEMY_OPTIMISM_KEY}`
-      },
-      Infura: {
-        name: 'Infura',
-        url: `https://optimism-mainnet.infura.io/v3/${INFURA_KEY}`
-      }
-    },
+    rpcUrls: rpcUrls.netId10,
     tokens: {
       eth: {
         instanceAddress: {
@@ -305,20 +258,7 @@ export default {
     deployedBlock: 3430648,
     multicall: '0x842eC2c7D803033Edf55E478F461FC547Bc54EB2',
     echoContractAccount: '0xa75BF2815618872f155b7C4B0C81bF990f5245E4',
-    rpcUrls: {
-      Arbitrum: {
-        name: 'Arbitrum Public RPC',
-        url: 'https://arb1.arbitrum.io/rpc'
-      },
-      Alchemy: {
-        name: 'Alchemy',
-        url: `https://arb-mainnet.g.alchemy.com/v2/${ALCHEMY_ARBITRUM_KEY}`
-      },
-      Infura: {
-        name: 'Infura',
-        url: `https://arbitrum-mainnet.infura.io/v3/${INFURA_KEY}`
-      }
-    },
+    rpcUrls: rpcUrls.netId42161,
     tokens: {
       eth: {
         instanceAddress: {
@@ -360,12 +300,7 @@ export default {
     deployedBlock: 17754561,
     multicall: '0xb5b692a88bdfc81ca69dcb1d924f59f0413a602a',
     echoContractAccount: '0xa75BF2815618872f155b7C4B0C81bF990f5245E4',
-    rpcUrls: {
-      publicRpc: {
-        name: 'Gnosis Chain RPC',
-        url: 'https://rpc.gnosischain.com/tornado'
-      }
-    },
+    rpcUrls: rpcUrls.netId100,
     tokens: {
       xdai: {
         instanceAddress: {
@@ -407,12 +342,7 @@ export default {
     deployedBlock: 4429818,
     multicall: '0xe86e3989c74293Acc962156cd3F525c07b6a1B6e',
     echoContractAccount: '0xa75BF2815618872f155b7C4B0C81bF990f5245E4',
-    rpcUrls: {
-      publicRpc: {
-        name: 'Avalanche RPC',
-        url: 'https://api.avax.network/ext/bc/C/rpc'
-      }
-    },
+    rpcUrls: rpcUrls.netId43114,
     tokens: {
       avax: {
         instanceAddress: {
@@ -454,12 +384,7 @@ export default {
     multicall: '0x77dca2c955b15e9de4dbbcf1246b4b85b651e50e',
     echoContractAccount: '0x37e6859804b6499d1e4a86d70a5fdd5de6a0ac65',
     aggregatorContract: '0x8cb1436F64a3c33aD17bb42F94e255c4c0E871b2',
-    rpcUrls: {
-      Alchemy: {
-        name: 'Alchemy',
-        url: `https://eth-goerli.alchemyapi.io/v2/${ALCHEMY_GOERLI_KEY}`
-      }
-    },
+    rpcUrls: rpcUrls.netId5,
     tokens: {
       eth: {
         instanceAddress: {

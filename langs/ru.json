@@ -256,6 +256,8 @@
   "pleaseLockBalance": "Чтобы отдать голос, сперва заблокируйте TORN",
   "pleaseDelegate": "Делегат не назначен",
   "internalError": "Внутренняя ошибка. Обновите страницу и повторите попытку",
+  "governanceTokensLocked": "Ваш баланс TORN всё ещё заблокирован governance-контрактом",
+  "governanceInsufficientBalance": "Сумма превышает ваш заблокированный баланс TORN",
   "id": "ID",
   "timerRemainingForPending": "Время до начала голосования",
   "timerRemainingForVoting": "Оставшееся время для голосования",
@@ -434,7 +436,9 @@
       "input": "Доступная stake награда"
     },
     "description": "Здесь вы можете получить вознаграждение за stake. Ваша заработанная доля прямо пропорциональна балансу TORN токенов, заблокированных для голосования.",
-    "action": "Получить"
+    "action": "Получить",
+    "nothingToClaim": "Нет доступной награды для получения",
+    "insufficientContractBalance": "На контракте staking-наград недостаточно TORN для выплаты. Получение награды сейчас недоступно."
   },
   "relayerTotal": {
     "label": "Current Relayer",

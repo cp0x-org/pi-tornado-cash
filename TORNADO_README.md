@@ -31,9 +31,41 @@ For detailed explanation on how things work, checkout [Nuxt.js docs](https://nux
 
 ## Update cached files
 
+### Automatic (docker compose)
+
+`docker-compose.yml` runs two services: `ui` (the generated site served by nuxt)
+and `cache-updater`, which refreshes ALL caches (events, encrypted notes, trees,
+zip, governance) on start and then every `UPDATE_INTERVAL_SECONDS` (default:
+weekly). Caches live in `./data/{events,trees,governance-cache}` on the host,
+shared between both containers, so the UI picks up updates without a rebuild
+(empty dirs are seeded from the image on the first updater start):
+
+```
+docker compose up -d
+docker compose logs -f cache-updater   # watch update progress
+```
+
+Force an update out of schedule:
+
+```
+docker compose exec cache-updater bash scripts/updateCaches.sh 1
+```
+
+One-shot full update locally (chains all commands below in the right order):
+
+```
+yarn update:caches 1
+```
+
+RPC endpoints are configured in `rpcConfig.js` (only Ethereum mainnet is
+actively used by this deployment).
+
+### Manual (individual commands)
+
 - For update deposits and withdrawals events use `yarn update:events {chainId}`
 - For update encrypted notes use `yarn update:encrypted {chainId}`
 - For update merkle tree use `yarn update:tree {chainId}`
+- For update governance cache use `yarn update:governance-cache {chainId}`
 
 #### NOTE!
 

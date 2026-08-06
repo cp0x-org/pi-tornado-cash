@@ -256,6 +256,8 @@
   "pleaseLockBalance": "Please lock TORN tokens first in order to delegate",
   "pleaseDelegate": "Delegatee has not being set",
   "internalError": "Internal Error. Please refresh the page and try again",
+  "governanceTokensLocked": "Your TORN balance is still locked by governance",
+  "governanceInsufficientBalance": "The amount exceeds your locked TORN balance",
   "id": "ID",
   "timerRemainingForPending": "Time remaining before voting starts",
   "timerRemainingForVoting": "Time remaining for voting",
@@ -456,7 +458,9 @@
       "input": "Available staking reward"
     },
     "description": "You can claim your staking reward here. Your earned reward is proportionate to your locked TORN in governance.",
-    "action": "Claim"
+    "action": "Claim",
+    "nothingToClaim": "There is no staking reward available to claim",
+    "insufficientContractBalance": "The staking reward contract does not have enough TORN to pay this reward. Claim is currently unavailable."
   },
   "relayerTotal": {
     "label": "Current Relayer",

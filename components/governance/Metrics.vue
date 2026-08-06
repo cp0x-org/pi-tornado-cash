@@ -56,6 +56,11 @@ export default {
   components: {
     NumberFormat
   },
+  data() {
+    return {
+      isManageBoxOpened: false
+    }
+  },
   computed: {
     ...mapState('torn', {
       balance: (state) => fromWei(state.balance)
@@ -69,7 +74,7 @@ export default {
       return fromWei(this.$store.getters['governance/gov/votingPower'])
     },
     isDataLoading() {
-      return this.isCheckingReward || this.isFetchingBalances
+      return this.isManageBoxOpened || this.isCheckingReward || this.isFetchingBalances
     }
   },
   watch: {
@@ -92,7 +97,14 @@ export default {
     ...mapActions('torn', ['fetchTokenBalance', 'fetchTokenAllowance']),
     ...mapActions('governance/gov', ['fetchUserData', 'fetchDelegatedBalance']),
     ...mapMutations('torn', ['REMOVE_SIGNATURE']),
-    onManage() {
+    async onManage() {
+      if (this.isManageBoxOpened) {
+        return
+      }
+
+      this.isManageBoxOpened = true
+      await this.fetchUserData()
+
       const manageBox = this.$buefy.modal.open({
         parent: this,
         component: ManageBox,
