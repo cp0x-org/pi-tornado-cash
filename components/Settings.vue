@@ -58,7 +58,6 @@
   </div>
 </template>
 <script>
-/* eslint-disable no-console */
 import { mapGetters, mapMutations } from 'vuex'
 
 import networkConfig from '../networkConfig'

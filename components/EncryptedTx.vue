@@ -69,7 +69,6 @@
   </div>
 </template>
 <script>
-/* eslint-disable no-console */
 import { decrypt } from 'eth-sig-util'
 import { mapGetters, mapState, mapActions } from 'vuex'
 import { toChecksumAddress, isAddress } from 'web3-utils'

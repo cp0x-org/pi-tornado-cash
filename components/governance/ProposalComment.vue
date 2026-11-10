@@ -53,7 +53,7 @@
         class="proposals-box--status-icon"
       />
       <span v-if="loading" class="proposals-box--skeleton">
-        <b-skeleton height="21" width="260" style="width: auto;" />
+        <b-skeleton height="21" width="260" style="width: auto" />
       </span>
       <template v-else>
         <span v-if="contact" class="proposals-box--title">{{ contact }}</span>

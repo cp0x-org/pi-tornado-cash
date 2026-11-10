@@ -65,7 +65,6 @@
   </div>
 </template>
 <script>
-/* eslint-disable no-console */
 import { mapActions, mapState, mapGetters } from 'vuex'
 
 import { sliceAddress } from '@/utils'

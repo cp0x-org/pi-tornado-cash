@@ -70,7 +70,6 @@
   </div>
 </template>
 <script>
-/* eslint-disable no-console */
 import { mapState, mapGetters } from 'vuex'
 import NumberFormat from '@/components/NumberFormat'
 

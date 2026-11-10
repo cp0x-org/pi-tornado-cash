@@ -59,7 +59,6 @@
   </b-tab-item>
 </template>
 <script>
-/* eslint-disable no-console */
 import { mapGetters } from 'vuex'
 
 import ApproveModalBox from '@/components/ApproveModalBox'

@@ -1,0 +1,13 @@
+diff --git a/node_modules/@nuxt/loading-screen/lib/module.js b/node_modules/@nuxt/loading-screen/lib/module.js
+index 1a6056b..d7b7558 100644
+--- a/node_modules/@nuxt/loading-screen/lib/module.js
++++ b/node_modules/@nuxt/loading-screen/lib/module.js
+@@ -3,7 +3,7 @@ module.exports = function NuxtLoadingScreen () {
+     return
+   }
+ 
+-  const defu = require('defu')
++  const { defu } = require('defu')
+   const LoadingUI = require('./loading')
+ 
+   const { nuxt } = this

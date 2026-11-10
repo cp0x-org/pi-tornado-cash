@@ -3,7 +3,6 @@
 </template>
 
 <script>
-/* eslint-disable no-console */
 import ProposalsList from '@/components/governance/ProposalsList'
 
 export default {

@@ -11,12 +11,7 @@ export async function download({ name, directory, contentType }) {
   const data = fs.readFileSync(path)
   const zip = await jszip.loadAsync(data)
 
-  const file = zip.file(
-    path
-      .replace(directory, '')
-      .slice(0, -4)
-      .toLowerCase()
-  )
+  const file = zip.file(path.replace(directory, '').slice(0, -4).toLowerCase())
 
   const content = await file.async(contentType)
 

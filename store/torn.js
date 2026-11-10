@@ -1,4 +1,3 @@
-/* eslint-disable no-console */
 import Web3 from 'web3'
 import { toBN } from 'web3-utils'
 import tornABI from '../abis/ERC20.abi.json'

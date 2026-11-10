@@ -51,7 +51,6 @@
   </div>
 </template>
 <script>
-/* eslint-disable no-console */
 import { mapState, mapGetters, mapActions } from 'vuex'
 
 import Txs from '@/components/Txs'

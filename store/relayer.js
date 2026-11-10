@@ -1,4 +1,3 @@
-/* eslint-disable no-console */
 import Web3 from 'web3'
 import BN from 'bignumber.js'
 import namehash from 'eth-ens-namehash'
@@ -306,14 +305,8 @@ export const actions = {
       console.log('filtered statuses ', statuses)
 
       try {
-        const {
-          name,
-          realUrl,
-          address,
-          ethPrices,
-          stakeBalance,
-          tornadoServiceFee
-        } = pickWeightedRandomRelayer(statuses, netId)
+        const { name, realUrl, address, ethPrices, stakeBalance, tornadoServiceFee } =
+          pickWeightedRandomRelayer(statuses, netId)
 
         console.log('Selected relayer', name, tornadoServiceFee)
         commit('SET_SELECTED_RELAYER', {
@@ -695,19 +688,22 @@ export const actions = {
     }
   },
   finishJobWatcher({ state, rootGetters, commit, dispatch, getters, rootState }, { id, netId, type }) {
-    const timerId = setTimeout(() => {
-      const { txHash, confirmations } = state.jobs[`netId${netId}`][type][id]
-      commit('UPDATE_JOB', {
-        id,
-        netId,
-        type,
-        txHash,
-        confirmations,
-        status: 'FAILED',
-        failedReason: this.app.i18n.t('relayerIsNotResponding')
-      })
-      commit('DELETE_JOB_WATCHER', { id })
-    }, 15 * 60 * 1000)
+    const timerId = setTimeout(
+      () => {
+        const { txHash, confirmations } = state.jobs[`netId${netId}`][type][id]
+        commit('UPDATE_JOB', {
+          id,
+          netId,
+          type,
+          txHash,
+          confirmations,
+          status: 'FAILED',
+          failedReason: this.app.i18n.t('relayerIsNotResponding')
+        })
+        commit('DELETE_JOB_WATCHER', { id })
+      },
+      15 * 60 * 1000
+    )
     commit('ADD_JOB_WATCHER', { id, timerId })
   },
   stopFinishJobWatcher({ state, rootGetters, commit, dispatch, getters, rootState }, { id }) {

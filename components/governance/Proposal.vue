@@ -306,10 +306,7 @@ export default {
     calculatePercent(result) {
       return this.results.isZero()
         ? 0
-        : toBN(toWei(this.data.results[result]))
-            .mul(toBN(100))
-            .divRound(this.results)
-            .toNumber()
+        : toBN(toWei(this.data.results[result])).mul(toBN(100)).divRound(this.results).toNumber()
     },
     onCastVote(support) {
       const { id } = this.data

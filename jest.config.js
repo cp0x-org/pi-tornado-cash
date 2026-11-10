@@ -1,4 +1,5 @@
 module.exports = {
+  testEnvironment: 'jsdom',
   moduleNameMapper: {
     '^@/(.*)$': '<rootDir>/$1',
     '^~/(.*)$': '<rootDir>/$1',
@@ -7,7 +8,7 @@ module.exports = {
   moduleFileExtensions: ['js', 'vue', 'json'],
   transform: {
     '^.+\\.js$': 'babel-jest',
-    '.*\\.(vue)$': 'vue-jest'
+    '.*\\.(vue)$': '@vue/vue2-jest'
   },
   collectCoverage: true,
   collectCoverageFrom: ['<rootDir>/components/**/*.vue', '<rootDir>/pages/**/*.vue']

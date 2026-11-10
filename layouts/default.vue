@@ -27,7 +27,6 @@
 </template>
 
 <script>
-/* eslint-disable no-console */
 import { mapGetters, mapActions } from 'vuex'
 
 import Navbar from '@/components/Navbar'

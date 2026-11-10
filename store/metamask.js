@@ -1,4 +1,3 @@
-/* eslint-disable no-console */
 import BN from 'bignumber.js'
 import { hexToNumber, numberToHex } from 'web3-utils'
 import { SnackbarProgrammatic as Snackbar, DialogProgrammatic as Dialog } from 'buefy'

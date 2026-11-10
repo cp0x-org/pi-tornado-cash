@@ -1,4 +1,3 @@
-/* eslint-disable no-console */
 // ~/plugins/localStorage.js
 import createPersistedState from 'vuex-persistedstate'
 

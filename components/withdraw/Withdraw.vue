@@ -143,7 +143,6 @@
   </b-tab-item>
 </template>
 <script>
-/* eslint-disable no-console */
 import { mapState, mapGetters } from 'vuex'
 import { getTornadoKeys } from '@/store/snark'
 

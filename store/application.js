@@ -1,5 +1,4 @@
-/* eslint-disable camelcase */
-/* eslint-disable no-console, import/order */
+/* eslint-disable import/order */
 import Web3 from 'web3'
 
 import networkConfig from '../networkConfig'
@@ -113,31 +112,37 @@ const getters = {
     const { url } = rootState.settings[`netId${netId}`].rpc
     return new EventsFactory(url)
   },
-  instanceContract: (state, getters, rootState) => ({ currency, amount, netId }) => {
-    const config = networkConfig[`netId${netId}`]
-    const { url } = rootState.settings[`netId${netId}`].rpc
-    const address = config.tokens[currency].instanceAddress[amount]
-    const web3 = new Web3(url)
-    return new web3.eth.Contract(InstanceABI, address)
-  },
-  multicallContract: (state, getters, rootState) => ({ netId }) => {
-    const config = networkConfig[`netId${netId}`]
-    const { url } = rootState.settings[`netId${netId}`].rpc
-    const web3 = new Web3(url)
-    return new web3.eth.Contract(MulticallABI, config.multicall)
-  },
-  tornadoProxyContract: (state, getters, rootState) => ({ netId }) => {
-    const {
-      'tornado-proxy.contract.tornadocash.eth': tornadoProxy,
-      'tornado-router.contract.tornadocash.eth': tornadoRouter,
-      'tornado-proxy-light.contract.tornadocash.eth': tornadoProxyLight
-    } = networkConfig[`netId${netId}`]
+  instanceContract:
+    (state, getters, rootState) =>
+    ({ currency, amount, netId }) => {
+      const config = networkConfig[`netId${netId}`]
+      const { url } = rootState.settings[`netId${netId}`].rpc
+      const address = config.tokens[currency].instanceAddress[amount]
+      const web3 = new Web3(url)
+      return new web3.eth.Contract(InstanceABI, address)
+    },
+  multicallContract:
+    (state, getters, rootState) =>
+    ({ netId }) => {
+      const config = networkConfig[`netId${netId}`]
+      const { url } = rootState.settings[`netId${netId}`].rpc
+      const web3 = new Web3(url)
+      return new web3.eth.Contract(MulticallABI, config.multicall)
+    },
+  tornadoProxyContract:
+    (state, getters, rootState) =>
+    ({ netId }) => {
+      const {
+        'tornado-proxy.contract.tornadocash.eth': tornadoProxy,
+        'tornado-router.contract.tornadocash.eth': tornadoRouter,
+        'tornado-proxy-light.contract.tornadocash.eth': tornadoProxyLight
+      } = networkConfig[`netId${netId}`]
 
-    const proxyContract = tornadoRouter || tornadoProxy || tornadoProxyLight
-    const { url } = rootState.settings[`netId${netId}`].rpc
-    const web3 = new Web3(url)
-    return new web3.eth.Contract(TornadoProxyABI, proxyContract)
-  },
+      const proxyContract = tornadoRouter || tornadoProxy || tornadoProxyLight
+      const { url } = rootState.settings[`netId${netId}`].rpc
+      const web3 = new Web3(url)
+      return new web3.eth.Contract(TornadoProxyABI, proxyContract)
+    },
   currentContract: (state, getters) => (params) => {
     return getters.tornadoProxyContract(params)
   },
@@ -235,9 +240,11 @@ const getters = {
     const tokens = rootGetters['metamask/networkConfig'].tokens
     return tokens[state.selectedStatistic.currency].symbol
   },
-  lastEventIndex: (state) => ({ currency, amount }) => {
-    return state.statistic[currency][amount].anonymitySet
-  },
+  lastEventIndex:
+    (state) =>
+    ({ currency, amount }) => {
+      return state.statistic[currency][amount].anonymitySet
+    },
   latestDeposits: (state) => {
     const { currency, amount } = state.selectedStatistic
     return state.statistic[currency][amount].latestDeposits
@@ -968,10 +975,7 @@ const actions = {
     const gasLimit = rootGetters['metamask/networkConfig'].tokens[currency].gasLimit
     const gasPrice = toBN(rootGetters['gasPrices/gasPrice'])
 
-    const ethToReceive = gasPrice
-      .mul(toBN(gasLimit))
-      .mul(toBN(2))
-      .toString()
+    const ethToReceive = gasPrice.mul(toBN(gasLimit)).mul(toBN(2)).toString()
     return ethToReceive
   },
   async setDefaultEthToReceive({ dispatch, commit }, { currency }) {

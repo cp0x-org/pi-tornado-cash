@@ -1,13 +1,20 @@
 import fs from 'fs'
-import zipper from 'zip-local'
+import path from 'path'
 
-export function save(fileName) {
+import Jszip from 'jszip'
+
+export async function save(fileName) {
   try {
-    zipper.sync
-      .zip(`${fileName}`)
-      .compress()
-      .save(`${fileName}.zip`)
+    const zip = new Jszip()
+    zip.file(path.basename(fileName), fs.readFileSync(fileName))
 
+    const content = await zip.generateAsync({
+      type: 'nodebuffer',
+      compression: 'DEFLATE',
+      compressionOptions: { level: 9 }
+    })
+
+    fs.writeFileSync(`${fileName}.zip`, content)
     fs.unlinkSync(fileName)
     return true
   } catch (err) {

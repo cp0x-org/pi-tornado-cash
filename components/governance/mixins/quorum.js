@@ -21,10 +21,7 @@ export default {
     quorumPercent() {
       return this.isQuorumCompleted
         ? 100
-        : toBN('100')
-            .mul(this.results)
-            .div(this.quorumVotesToWei)
-            .toNumber()
+        : toBN('100').mul(this.results).div(this.quorumVotesToWei).toNumber()
     }
   }
 }

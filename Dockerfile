@@ -1,11 +1,12 @@
 # 1. Build stage
-FROM node:16 AS build
+FROM node:22 AS build
 
 WORKDIR /app
 
 ENV NUXT_TELEMETRY_DISABLED=1
 
 COPY package*.json yarn.lock* ./
+COPY patches ./patches
 RUN yarn install --frozen-lockfile
 
 COPY . .
@@ -20,12 +21,13 @@ RUN yarn build
 RUN yarn generate
 
 # 2. Runtime stage
-FROM node:16 AS runtime
+FROM node:22 AS runtime
 
 WORKDIR /app
 
 # Ставим все зависимости (можно с --production, но лучше полностью)
 COPY package*.json yarn.lock ./
+COPY patches ./patches
 RUN yarn install --frozen-lockfile
 
 # Копируем сборку

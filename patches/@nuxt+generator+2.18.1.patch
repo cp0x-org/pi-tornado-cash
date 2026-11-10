@@ -1,0 +1,20 @@
+diff --git a/node_modules/@nuxt/generator/dist/generator.js b/node_modules/@nuxt/generator/dist/generator.js
+index 2cbb283..4825d10 100644
+--- a/node_modules/@nuxt/generator/dist/generator.js
++++ b/node_modules/@nuxt/generator/dist/generator.js
+@@ -9,7 +9,6 @@
+ const path = require('path');
+ const chalk = require('chalk');
+ const consola = require('consola');
+-const devalue = require('devalue');
+ const fsExtra = require('fs-extra');
+ const defu = require('defu');
+ const htmlMinifier = require('html-minifier-terser');
+@@ -60,6 +59,7 @@ class Generator {
+       await this.nuxt.callHook("generate:manifest", this.manifest, this);
+       const manifestPath = path.join(this.staticAssetsDir, "manifest.js");
+       await fsExtra.ensureDir(this.staticAssetsDir);
++      const { uneval: devalue } = await import('devalue');
+       await fsExtra.writeFile(manifestPath, `__NUXT_JSONP__("manifest.js", ${devalue(this.manifest)})`, "utf-8");
+       consola.success("Static manifest generated");
+     }

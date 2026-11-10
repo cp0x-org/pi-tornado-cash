@@ -1,6 +1,3 @@
-/* eslint-disable no-console */
-/* eslint-disable import/order */
-
 import { utils } from 'ethers'
 import uniqBy from 'lodash/uniqBy'
 import chunk from 'lodash/chunk'
@@ -170,11 +167,7 @@ const createProposalComment = (resultAll, votedEvent) => {
 
   const comment = parseComment()
 
-  const percentage =
-    toBN(votedEvent.returnValues.votes)
-      .mul(toBN(10000))
-      .divRound(resultAll)
-      .toNumber() / 100
+  const percentage = toBN(votedEvent.returnValues.votes).mul(toBN(10000)).divRound(resultAll).toNumber() / 100
 
   return {
     id: `${transactionHash}-${voter}`,

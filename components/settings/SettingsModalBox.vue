@@ -11,7 +11,6 @@
   </div>
 </template>
 <script>
-/* eslint-disable no-console */
 import { mapState, mapMutations } from 'vuex'
 
 import { RelayerTab, WalletTab } from '@/components/settings/tabs'

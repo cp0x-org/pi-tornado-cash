@@ -55,7 +55,9 @@ async function main() {
       zeroElement: config.emptyElement
     })
 
-    writtenFiles.forEach((filePath) => save(filePath))
+    for (const filePath of writtenFiles) {
+      await save(filePath)
+    }
   }
 }
 

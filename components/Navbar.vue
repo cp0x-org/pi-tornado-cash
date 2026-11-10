@@ -6,13 +6,13 @@
         to="/"
         data-test="tornado_main_page"
         active-class=""
-        style="display: flex; flex-direction: column; align-items: flex-start;"
+        style="display: flex; flex-direction: column; align-items: flex-start"
       >
-        <div style="display: flex; align-items: flex-start;">
+        <div style="display: flex; align-items: flex-start">
           <Logo />
         </div>
-        <div style="display: flex; align-items: center; margin-left: 54px;">
-          <span style="margin-right: 4px;">by</span>
+        <div style="display: flex; align-items: center; margin-left: 54px">
+          <span style="margin-right: 4px">by</span>
           <Cp0xLogo />
         </div>
       </b-navbar-item>
