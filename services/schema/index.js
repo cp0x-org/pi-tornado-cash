@@ -5,7 +5,8 @@ import relayerSchemas from './relayer'
 const Ajv = require('ajv')
 const ajv = new Ajv({ allErrors: true, schemas: relayerSchemas })
 
-ajv.addKeyword('BN', {
+ajv.addKeyword({
+  keyword: 'BN',
   validate: (schema, data) => {
     try {
       toBN(data)

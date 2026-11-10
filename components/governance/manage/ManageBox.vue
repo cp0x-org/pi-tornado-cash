@@ -11,7 +11,6 @@
   </div>
 </template>
 <script>
-/* eslint-disable no-console */
 import { mapActions } from 'vuex'
 import { BigNumber as BN } from 'bignumber.js'
 

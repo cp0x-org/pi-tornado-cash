@@ -106,8 +106,8 @@
                 mobileSort === 'timestamp'
                   ? $t('timePassed')
                   : mobileSort === 'amount'
-                  ? $t('amount')
-                  : $t('subsequentDeposits')
+                    ? $t('amount')
+                    : $t('subsequentDeposits')
               }}</span>
             </div>
           </div>
@@ -144,7 +144,6 @@
 </template>
 
 <script>
-/* eslint-disable no-console */
 import { mapActions, mapGetters, mapState } from 'vuex'
 import Tx from '@/components/Tx'
 import EncryptedTx from '@/components/EncryptedTx'

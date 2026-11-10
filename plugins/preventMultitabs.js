@@ -1,4 +1,3 @@
-/* eslint-disable no-console */
 export default ({ store, isHMR, app }, inject) => {
   inject('preventMultitabs', main)
 }
@@ -7,7 +6,7 @@ function main(store) {
   window.id = id
   window.localStorage.setItem('firstTab', id)
 
-  const onLocalStorageEvent = function(e) {
+  const onLocalStorageEvent = function (e) {
     // the second tab will write its id to this key. The first one will notice it
     if (e.key === 'firstTab') {
       const newID = Date.now()

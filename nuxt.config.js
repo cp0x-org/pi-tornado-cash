@@ -12,17 +12,13 @@ const hooks = (nuxtConfig) => ({
 
 let hasSourceMaps = '#source-map'
 if (process.env.NODE_ENV !== 'development') {
-  // eslint-disable-next-line no-console
   console.log('NODE_ENV', process.env.NODE_ENV)
   hasSourceMaps = false
 }
 
 function getCurrentCommit() {
   try {
-    return execSync('git rev-parse HEAD')
-      .toString()
-      .trim()
-      .substr(0, 7)
+    return execSync('git rev-parse HEAD').toString().trim().substr(0, 7)
   } catch (e) {
     console.error('Failed to get git commit', e.message)
     return 'debug'
@@ -173,6 +169,21 @@ export default {
    ** Build configuration
    */
   build: {
+    transpile: [
+      // libraries shipped as ES2020+ (optional chaining, class fields); webpack 4 cannot parse them untranspiled
+      'jspdf',
+      'fast-png',
+      'iobuffer',
+      '@ethereumjs/util',
+      '@ethereumjs/rlp',
+      '@noble/curves',
+      '@noble/hashes',
+      '@scure/base',
+      '@scure/bip32',
+      '@scure/bip39',
+      'ethereum-cryptography',
+      'micro-ftch'
+    ],
     /*
      ** You can extend webpack config here
      */
@@ -213,7 +224,13 @@ export default {
     },
     loaders: {
       fontUrl: { limit: 25000 },
-      imgUrl: { limit: 15000 }
+      imgUrl: { limit: 15000 },
+      scss: {
+        sassOptions: {
+          quietDeps: true,
+          silenceDeprecations: ['legacy-js-api', 'import', 'global-builtin', 'color-functions', 'if-function']
+        }
+      }
     },
     splitChunks: {
       layouts: false,

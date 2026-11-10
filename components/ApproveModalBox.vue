@@ -26,7 +26,6 @@
   </div>
 </template>
 <script>
-/* eslint-disable no-console */
 import { mapActions, mapState, mapGetters } from 'vuex'
 
 export default {

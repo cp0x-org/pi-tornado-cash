@@ -15,18 +15,20 @@ export const state = () => {
 }
 
 export const getters = {
-  stakingRewardsContract: (state, getters, rootState) => ({ netId }) => {
-    const config = networkConfig[`netId${netId}`]
-    const { url } = rootState.settings[`netId${netId}`].rpc
-    const address = config['staking-rewards.contract.tornadocash.eth']
+  stakingRewardsContract:
+    (state, getters, rootState) =>
+    ({ netId }) => {
+      const config = networkConfig[`netId${netId}`]
+      const { url } = rootState.settings[`netId${netId}`].rpc
+      const address = config['staking-rewards.contract.tornadocash.eth']
 
-    if (address) {
-      const web3 = new Web3(url)
-      return new web3.eth.Contract(TornadoStakingRewardsABI, address)
-    }
+      if (address) {
+        const web3 = new Web3(url)
+        return new web3.eth.Contract(TornadoStakingRewardsABI, address)
+      }
 
-    return null
-  },
+      return null
+    },
   earnedReward: (state) => {
     return fromWei(state.accumulatedReward)
   },

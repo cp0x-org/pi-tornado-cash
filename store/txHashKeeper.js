@@ -1,4 +1,3 @@
-/* eslint-disable no-console */
 import { hexToNumber } from 'web3-utils'
 
 import txStatus from './txStatus'

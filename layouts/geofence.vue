@@ -20,7 +20,6 @@
 </template>
 
 <script>
-/* eslint-disable no-console */
 import Logo from '@/components/Logo'
 import Footer from '@/components/Footer'
 

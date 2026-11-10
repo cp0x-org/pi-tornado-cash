@@ -13,8 +13,6 @@
   </div>
 </template>
 <script>
-/* eslint-disable no-console */
-
 export default {
   props: {
     note: {

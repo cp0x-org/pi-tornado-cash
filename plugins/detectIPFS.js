@@ -1,4 +1,3 @@
-/* eslint-disable no-console */
 export default ({ store, isHMR, app }, inject) => {
   inject('isLoadedFromIPFS', main)
 }

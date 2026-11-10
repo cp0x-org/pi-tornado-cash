@@ -13,9 +13,9 @@ const statusSchema = {
             instanceAddress: {
               type: 'object',
               properties: {
-                '10': addressType,
-                '100': addressType,
-                '500': addressType
+                10: addressType,
+                100: addressType,
+                500: addressType
               },
               required: ['10', '100', '500']
             },

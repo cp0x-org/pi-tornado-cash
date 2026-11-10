@@ -1,6 +1,3 @@
-/* eslint-disable no-console */
-/* eslint-disable import/order */
-
 import Web3 from 'web3'
 import { utils } from 'ethers'
 
@@ -188,24 +185,30 @@ const state = () => {
 }
 
 const getters = {
-  getConfig: (state, getters, rootState) => ({ netId }) => {
-    return networkConfig[`netId${netId}`]
-  },
-  getWeb3: (state, getters, rootState) => ({ netId }) => {
-    const { url } = rootState.settings[`netId${netId}`].rpc
-    return new Web3(url)
-  },
-  govContract: (state, getters, rootState) => ({ netId }) => {
-    const config = getters.getConfig({ netId })
-    const address = config['governance.contract.tornadocash.eth']
-    if (address) {
-      const web3 = getters.getWeb3({ netId })
-      const contract = new web3.eth.Contract(GovernanceABI, address)
-      return contract
-    }
+  getConfig:
+    (state, getters, rootState) =>
+    ({ netId }) => {
+      return networkConfig[`netId${netId}`]
+    },
+  getWeb3:
+    (state, getters, rootState) =>
+    ({ netId }) => {
+      const { url } = rootState.settings[`netId${netId}`].rpc
+      return new Web3(url)
+    },
+  govContract:
+    (state, getters, rootState) =>
+    ({ netId }) => {
+      const config = getters.getConfig({ netId })
+      const address = config['governance.contract.tornadocash.eth']
+      if (address) {
+        const web3 = getters.getWeb3({ netId })
+        const contract = new web3.eth.Contract(GovernanceABI, address)
+        return contract
+      }
 
-    return null
-  },
+      return null
+    },
   aggregatorContract: (state, getters, rootState, rootGetters) => {
     const { aggregatorContract } = rootGetters['metamask/networkConfig']
     const { url } = rootGetters['settings/currentRpc']
@@ -220,9 +223,7 @@ const getters = {
     return isFetchingProposals
   },
   votingPower: (state) => {
-    return toBN(state.lockedBalance)
-      .add(toBN(state.delegatedBalance))
-      .toString(10)
+    return toBN(state.lockedBalance).add(toBN(state.delegatedBalance)).toString(10)
   },
   quorumVotes: (state, getters, rootState, rootGetters) => {
     return rootGetters['token/toDecimals'](state.constants.QUORUM_VOTES, 18)

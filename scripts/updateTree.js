@@ -18,7 +18,7 @@ function getName({ path, type, instance, format = '.json', currName = 'eth' }) {
   return `${path}${type.toLowerCase()}s_${currName}_${instance}${format}`
 }
 
-function createTreeZip(netId) {
+async function createTreeZip(netId) {
   try {
     const config = networkConfig[`netId${netId}`]
     const { instanceAddress: CONTRACTS } = config.tokens.eth
@@ -35,14 +35,14 @@ function createTreeZip(netId) {
 
         const treesFolder = fs.readdirSync(TREES_FOLDER)
 
-        treesFolder.forEach((fileName) => {
-          fileName = `${TREES_PATH}${fileName}`
+        for (const name of treesFolder) {
+          const fileName = `${TREES_PATH}${name}`
           const isInstanceFile = !fileName.includes('.zip') && fileName.includes(baseFilename)
 
           if (isInstanceFile) {
-            save(fileName)
+            await save(fileName)
           }
-        })
+        }
       }
     }
   } catch {}

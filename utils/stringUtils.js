@@ -13,10 +13,7 @@ export const sliceAddress = (address) => {
 export const sliceEnsName = (name, size = 4, separator = '...') => {
   const chars = [...name]
 
-  const last = name
-    .split('.')
-    .pop()
-    .slice(-size)
+  const last = name.split('.').pop().slice(-size)
 
   if (chars[0]?.length === 2 && last) {
     // 🐵🍆💦.eth -> 🐵🍆💦.eth
@@ -34,7 +31,8 @@ export const sliceEnsName = (name, size = 4, separator = '...') => {
     : [].concat(chars.slice(0, size), separator, chars.slice(-size)).join('')
 }
 
-const semVerRegex = /^(?<major>0|[1-9]\d*)\.(?<minor>0|[1-9]\d*)\.(?<patch>0|[1-9]\d*)(?:-(?<prerelease>(?:0|[1-9]\d*|\d*[a-zA-Z-][0-9a-zA-Z-]*)(?:\.(?:0|[1-9]\d*|\d*[a-zA-Z-][0-9a-zA-Z-]*))*))?(?:\+(?<buildmetadata>[0-9a-zA-Z-]+(?:\.[0-9a-zA-Z-]+)*))?$/
+const semVerRegex =
+  /^(?<major>0|[1-9]\d*)\.(?<minor>0|[1-9]\d*)\.(?<patch>0|[1-9]\d*)(?:-(?<prerelease>(?:0|[1-9]\d*|\d*[a-zA-Z-][0-9a-zA-Z-]*)(?:\.(?:0|[1-9]\d*|\d*[a-zA-Z-][0-9a-zA-Z-]*))*))?(?:\+(?<buildmetadata>[0-9a-zA-Z-]+(?:\.[0-9a-zA-Z-]+)*))?$/
 
 export const parseSemanticVersion = (version) => {
   const { groups } = semVerRegex.exec(version)

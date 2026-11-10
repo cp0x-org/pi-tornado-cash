@@ -57,10 +57,7 @@
               <div class="value">
                 {{
                   txDepositInfo.timestamp
-                    ? `${this.$moment
-                        .unix(txDepositInfo.timestamp)
-                        .utc()
-                        .format('lll')} +UTC`
+                    ? `${this.$moment.unix(txDepositInfo.timestamp).utc().format('lll')} +UTC`
                     : '-'
                 }}
               </div>
@@ -146,10 +143,7 @@
               <div class="value">
                 {{
                   txWithdrawalInfo.timestamp
-                    ? `${this.$moment
-                        .unix(txWithdrawalInfo.timestamp)
-                        .utc()
-                        .format('lll')} +UTC`
+                    ? `${this.$moment.unix(txWithdrawalInfo.timestamp).utc().format('lll')} +UTC`
                     : '-'
                 }}
               </div>
@@ -224,7 +218,6 @@
 </template>
 
 <script>
-/* eslint-disable no-console */
 import Web3 from 'web3'
 import { mapGetters } from 'vuex'
 
@@ -379,14 +372,10 @@ export default {
         return
       }
 
-      const JsPdf = require('jspdf')
+      const { jsPDF: JsPdf } = require('jspdf')
       const doc = new JsPdf()
 
-      doc
-        .setFontSize(9)
-        .setLineHeightFactor(1.5)
-        .setFont('courier')
-        .setFontStyle('normal')
+      doc.setFontSize(9).setLineHeightFactor(1.5).setFont('courier', 'normal')
 
       const width = doc.internal.pageSize.getWidth()
       const padding = 10
@@ -409,14 +398,8 @@ export default {
       // save current moment locale
       const locale = this.$moment.locale()
       this.$moment.locale('en')
-      const depositDate = `${this.$moment
-        .unix(this.txDepositInfo.timestamp)
-        .utc()
-        .format('lll')} +UTC`
-      const withdrawDate = `${this.$moment
-        .unix(this.txWithdrawalInfo.timestamp)
-        .utc()
-        .format('lll')} +UTC`
+      const depositDate = `${this.$moment.unix(this.txDepositInfo.timestamp).utc().format('lll')} +UTC`
+      const withdrawDate = `${this.$moment.unix(this.txWithdrawalInfo.timestamp).utc().format('lll')} +UTC`
 
       // return the previous moment locale
       this.$moment.locale(locale)
@@ -442,7 +425,7 @@ export default {
       doc.text(this.$t('nullifierHash', 'en'), startSecondColumnX, 141)
       doc.text(complianceWarning, padding, 209)
 
-      doc.setFontStyle('bold').text(note, padding, 56)
+      doc.setFont('courier', 'bold').text(note, padding, 56)
       doc.text(depositDate, padding, 97)
       doc.text(withdrawDate, startSecondColumnX, 97)
 
@@ -486,17 +469,17 @@ export default {
       doc.text(nullifier, startSecondColumnX, 147)
 
       doc.setFontSize(20).text('Tornado.cash', padding, 40)
-      doc.setFontStyle('normal').text(this.$t('complianceReport', 'en'), 65, 40)
+      doc.setFont('courier', 'normal').text(this.$t('complianceReport', 'en'), 65, 40)
 
       doc.setFontSize(8).text(this.$t('verified', 'en'), padding, 81)
       doc.text(this.$t('verified', 'en'), startSecondColumnX, 81)
-      doc.text(fee, endX, 81, null, null, 'right')
+      doc.text(fee, endX, 81, { align: 'right' })
 
       doc.setFontSize(14).text(this.$t('deposit', 'en'), padding, 75)
       doc.text(this.$t('withdrawal', 'en'), startSecondColumnX, 75)
       doc.text(this.$t('warning', 'en'), padding, 200)
-      doc.setFontStyle('bold').text(depositAmount, endFirstColumnX, 75, null, null, 'right')
-      doc.text(withdrawalAmount, endX, 75, null, null, 'right')
+      doc.setFont('courier', 'bold').text(depositAmount, endFirstColumnX, 75, { align: 'right' })
+      doc.text(withdrawalAmount, endX, 75, { align: 'right' })
 
       const logo = require('@/assets/img/tornado_black.png')
       const imgLogo = new Image()

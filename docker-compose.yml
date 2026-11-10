@@ -1,0 +1,48 @@
+# Tornado Cash UI (только Ethereum mainnet) + автоматическое обновление кешей.
+#
+# Кеши (events / trees / governance-cache) хранятся в ./data/<папка> на хосте:
+#  - контейнер `ui` раздаёт их клиентам;
+#  - контейнер `cache-updater` обновляет их по расписанию
+#    (при старте и далее каждые UPDATE_INTERVAL_SECONDS, по умолчанию раз в неделю).
+# При первом запуске cache-updater заполняет пустые папки кешами из образа.
+#
+# Ручное обновление кешей по-прежнему доступно:
+#   docker compose exec cache-updater bash scripts/updateCaches.sh 1
+# или локально: yarn update:caches 1 (и отдельные yarn update:* команды).
+
+services:
+  web-tornadocash-ui:
+    image: cp0x/pi-tornadomini-interface:0.1.21
+    build:
+      context: .
+      dockerfile: Dockerfile
+    restart: always
+    container_name: web-tornadocash-ui
+    ports:
+      - '3008:3000'
+    volumes:
+      - ./data/events:/app/dist/events
+      - ./data/trees:/app/dist/trees
+      - ./data/governance-cache:/app/dist/governance-cache
+    networks:
+      - tornado_net
+
+  tornadocash-cache-updater:
+    image: cp0x/pi-tornadomini-interface:0.1.21
+    restart: always
+    container_name: tornadocash-cache-updater
+    command: ['bash', 'scripts/cacheUpdaterLoop.sh']
+    environment:
+      # раз в неделю; поменяйте при необходимости
+      UPDATE_INTERVAL_SECONDS: '604800'
+      UPDATE_NET_ID: '1'
+    volumes:
+      - ./data/events:/app/static/events
+      - ./data/trees:/app/static/trees
+      - ./data/governance-cache:/app/static/governance-cache
+    networks:
+      - tornado_net
+
+networks:
+  tornado_net:
+    driver: bridge

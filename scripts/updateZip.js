@@ -6,11 +6,11 @@ import { loadCachedEvents, save } from './helpers'
 const EVENTS_PATH = './static/events/'
 const EVENTS = ['Deposit', 'Withdrawal']
 
-function updateEncrypted(netId) {
+async function updateEncrypted(netId) {
   try {
     const file = `${EVENTS_PATH}encrypted_notes_${netId}.json`
 
-    save(file)
+    await save(file)
   } catch {}
 }
 async function updateCommon(netId) {
@@ -21,7 +21,7 @@ async function updateCommon(netId) {
     for await (const instance of Object.keys(tokens[nativeCurrency].instanceAddress)) {
       console.warn('instance', instance)
       const filename = `${type.toLowerCase()}s_${nativeCurrency}_${instance}.json`
-      const isSaved = save(`${EVENTS_PATH}${filename}`)
+      const isSaved = await save(`${EVENTS_PATH}${filename}`)
       if (isSaved) {
         try {
           await testCommon(netId, type, filename)
@@ -61,7 +61,7 @@ async function main() {
   const NETWORKS = [1, 5, 56]
 
   for await (const netId of NETWORKS) {
-    updateEncrypted(netId)
+    await updateEncrypted(netId)
     await updateCommon(netId)
   }
 }

@@ -1,4 +1,4 @@
-import { ApolloClient, InMemoryCache, gql } from '@apollo/client/core'
+import { ApolloClient, HttpLink, InMemoryCache, gql } from '@apollo/client/core'
 
 import {
   _META,
@@ -26,8 +26,10 @@ const CHAIN_GRAPH_URLS = {
   56: 'https://gateway.thegraph.com/api/30503850823438e04497429381e416f7/subgraphs/id/CiwGzefDBZCavXRPnwarnnF8xDDoLw4boBuySomJWYnV',
   100: 'https://api.thegraph.com/subgraphs/name/tornadocash/xdai-tornado-subgraph',
   137: 'https://gateway.thegraph.com/api/d2db349f28c895aa2272421996404c8d/subgraphs/id/HUMgwMYNrPQpnBJgesFXyy5u6jSiJ6u5nNWQng9ayCmD',
-  42161: 'https://gateway.thegraph.com/api/d2db349f28c895aa2272421996404c8d/subgraphs/id/8x8o6XFAqYZmiPwrJ51UxGTaZLYyW1fFtghvsEy7a1KJ',
-  43114: 'https://gateway.thegraph.com/api/d2db349f28c895aa2272421996404c8d/subgraphs/id/CqUYVKJT9Jsyt7qnGNrf4FJNHw75ZbFGuzaJgqdaFASo'
+  42161:
+    'https://gateway.thegraph.com/api/d2db349f28c895aa2272421996404c8d/subgraphs/id/8x8o6XFAqYZmiPwrJ51UxGTaZLYyW1fFtghvsEy7a1KJ',
+  43114:
+    'https://gateway.thegraph.com/api/d2db349f28c895aa2272421996404c8d/subgraphs/id/CqUYVKJT9Jsyt7qnGNrf4FJNHw75ZbFGuzaJgqdaFASo'
 }
 
 const defaultOptions = {
@@ -38,14 +40,15 @@ const defaultOptions = {
 }
 
 const client = new ApolloClient({
-  uri: link,
+  link: new HttpLink({ uri: link }),
   cache: new InMemoryCache(),
   defaultOptions
 })
 
 const registryClient = new ApolloClient({
-  uri:
-    'https://gateway.thegraph.com/api/22fff305c594b60259fbc8e6ee00a8b3/subgraphs/id/DgKwfAbLfynpiq7fDJy59LDnVnia4Y5nYeRDBYi9qezc',
+  link: new HttpLink({
+    uri: 'https://gateway.thegraph.com/api/22fff305c594b60259fbc8e6ee00a8b3/subgraphs/id/DgKwfAbLfynpiq7fDJy59LDnVnia4Y5nYeRDBYi9qezc'
+  }),
   cache: new InMemoryCache(),
   defaultOptions
 })

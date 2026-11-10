@@ -1,5 +1,3 @@
-/* eslint-disable no-console */
-/* eslint-disable import/order */
 import Web3 from 'web3'
 import networkConfig from '../networkConfig'
 import ERC20ABI from '@/abis/ERC20.abi.json'
@@ -17,13 +15,15 @@ export const state = () => {
 }
 
 export const getters = {
-  tokenContract: (state, getters, rootState, rootGetters) => ({ currency, netId }) => {
-    const config = networkConfig[`netId${netId}`]
-    const { url } = rootState.settings[`netId${netId}`].rpc
-    const address = config.tokens[currency].tokenAddress
-    const web3 = new Web3(url)
-    return new web3.eth.Contract(ERC20ABI, address)
-  },
+  tokenContract:
+    (state, getters, rootState, rootGetters) =>
+    ({ currency, netId }) => {
+      const config = networkConfig[`netId${netId}`]
+      const { url } = rootState.settings[`netId${netId}`].rpc
+      const address = config.tokens[currency].tokenAddress
+      const web3 = new Web3(url)
+      return new web3.eth.Contract(ERC20ABI, address)
+    },
   // similar to fromWei from web3
   toDecimals: (state, getters, rootState, rootGetters) => (value, decimals, fixed) => {
     const { currency } = rootState.application.selectedStatistic

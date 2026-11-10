@@ -1,4 +1,3 @@
-/* eslint-disable no-console */
 import Web3 from 'web3'
 
 import networkConfig from '../networkConfig'

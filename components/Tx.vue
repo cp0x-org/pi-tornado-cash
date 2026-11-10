@@ -62,7 +62,6 @@
   </div>
 </template>
 <script>
-/* eslint-disable no-console */
 import { mapGetters, mapState } from 'vuex'
 import txStatus from '../store/txStatus'
 import NumberFormat from '@/components/NumberFormat'

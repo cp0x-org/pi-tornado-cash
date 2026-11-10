@@ -13,10 +13,10 @@ const statusSchema = {
             instanceAddress: {
               type: 'object',
               properties: {
-                '100': addressType,
-                '1000': addressType,
-                '10000': addressType,
-                '100000': addressType
+                100: addressType,
+                1000: addressType,
+                10000: addressType,
+                100000: addressType
               },
               required: ['100', '1000', '10000', '100000']
             },
@@ -32,10 +32,10 @@ const statusSchema = {
             instanceAddress: {
               type: 'object',
               properties: {
-                '100': addressType,
-                '1000': addressType,
-                '10000': addressType,
-                '100000': addressType
+                100: addressType,
+                1000: addressType,
+                10000: addressType,
+                100000: addressType
               },
               required: ['100', '1000']
             },
@@ -51,10 +51,10 @@ const statusSchema = {
             instanceAddress: {
               type: 'object',
               properties: {
-                '100': addressType,
-                '1000': addressType,
-                '10000': addressType,
-                '100000': addressType
+                100: addressType,
+                1000: addressType,
+                10000: addressType,
+                100000: addressType
               },
               required: ['100', '1000']
             },
@@ -70,10 +70,10 @@ const statusSchema = {
             instanceAddress: {
               type: 'object',
               properties: {
-                '5000': addressType,
-                '50000': addressType,
-                '500000': addressType,
-                '5000000': addressType
+                5000: addressType,
+                50000: addressType,
+                500000: addressType,
+                5000000: addressType
               },
               required: ['5000', '50000', '500000', '5000000']
             },
@@ -89,10 +89,10 @@ const statusSchema = {
             instanceAddress: {
               type: 'object',
               properties: {
-                '0.1': addressType,
-                '1': addressType,
-                '10': addressType,
-                '100': addressType
+                0.1: addressType,
+                1: addressType,
+                10: addressType,
+                100: addressType
               },
               required: ['0.1', '1', '10']
             },
@@ -108,10 +108,10 @@ const statusSchema = {
             instanceAddress: {
               type: 'object',
               properties: {
-                '0.1': addressType,
-                '1': addressType,
-                '10': addressType,
-                '100': addressType
+                0.1: addressType,
+                1: addressType,
+                10: addressType,
+                100: addressType
               },
               required: ['0.1', '1', '10', '100']
             },
